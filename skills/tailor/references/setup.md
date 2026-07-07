@@ -56,7 +56,9 @@ questions (rendering, styling) and plain prompts for free-text (name, paths).
 Fill any unset field with its default from `config-reference.md`. Write the JSON
 to `resume.config.json` in the workspace root, then show it to the user and
 confirm. For `render.command`, substitute the skill's real absolute directory for
-`{skillDir}` so it works regardless of where the skill is installed.
+`{skillDir}` (resolve `${CLAUDE_PLUGIN_ROOT}/skills/tailor` to its concrete
+absolute path and write that) so the saved command works regardless of where the
+plugin is installed.
 
 Then continue to **Step 0** with the job description the user gave — or, if they
 were only setting up, tell them setup is done and to re-run with a JD.

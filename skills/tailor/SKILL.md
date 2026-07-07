@@ -1,5 +1,5 @@
 ---
-name: tailor-resume
+name: tailor
 description: >-
   Tailor a résumé/CV to a specific job description by SELECTING verbatim bullets
   from the candidate's own master experience bank (never inventing prose), then
@@ -228,9 +228,11 @@ can't back it verbatim → it's a master-bank suggestion).
 
 ## Step 5 — Verbatim gate, render & report
 
-1. **Anti-fabrication gate (mandatory, before rendering):** run
+1. **Anti-fabrication gate (mandatory, before rendering):** run the bundled
+   checker (it lives in the `scripts/` directory beside this SKILL.md — when
+   installed as a plugin that path is `${CLAUDE_PLUGIN_ROOT}/skills/tailor/scripts`):
    ```
-   node <skillDir>/scripts/verbatim-check.js <masterBankPath> <applicationsDir>/<slug>/cv-optimised.md
+   node ${CLAUDE_PLUGIN_ROOT}/skills/tailor/scripts/verbatim-check.js <masterBankPath> <applicationsDir>/<slug>/cv-optimised.md
    ```
    It confirms every EXPERIENCE bullet and PERSONAL PROJECTS entry is verbatim
    from the master bank (profile/blurbs are exempt — light tailoring is allowed).
@@ -239,9 +241,9 @@ can't back it verbatim → it's a master-bank suggestion).
    here means a bullet was silently reworded or invented — the exact failure this
    skill exists to prevent.
 2. **Render** only if `render.enabled` is true: run the configured render command
-   (default `node <skillDir>/scripts/render-cv.mjs <cv.md> <output-basename>
-   --role "<role>"`) and confirm the HTML + PDF were written. If rendering is
-   disabled, the tailored `.md` is the deliverable.
+   (default `node ${CLAUDE_PLUGIN_ROOT}/skills/tailor/scripts/render-cv.mjs
+   <cv.md> <output-basename> --role "<role>"`) and confirm the HTML + PDF were
+   written. If rendering is disabled, the tailored `.md` is the deliverable.
 3. **Report** to the user:
    - Final panel scores (round count, each reviewer's closing confidence, whether
      all cleared the bar).

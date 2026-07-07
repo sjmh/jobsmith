@@ -48,8 +48,10 @@ itself stays generic. All fields have defaults; a minimal config only needs
 
 ## Placeholders in `render.command`
 
-- `{skillDir}` — the absolute path to this skill's directory (so the bundled
-  renderer is found wherever the skill is installed).
+- `{skillDir}` — the absolute path to this skill's directory, so the bundled
+  renderer is found wherever the skill is installed. When installed as the
+  `jobsmith` plugin this resolves to `${CLAUDE_PLUGIN_ROOT}/skills/tailor`; the
+  setup step writes the concrete absolute path into the saved config.
 - `{cv}` — path to the tailored `cv-optimised.md`.
 - `{out}` — the output basename (no extension); `.html` and `.pdf` are written next to it.
 - `{role}` — the resolved role string for the header.

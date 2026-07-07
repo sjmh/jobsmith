@@ -1,0 +1,15 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "jobsmith",
+  "description": "Job-application tools for Claude Code — starting with résumé tailoring grounded in your own verbatim experience bank.",
+  "owner": {
+    "name": "Steven Hajducko"
+  },
+  "plugins": [
+    {
+      "name": "jobsmith",
+      "source": "./",
+      "description": "Tailor a résumé to a job by selecting your own accomplishments verbatim from a master bank, then looping it through a peer-review panel until every reviewer clears a confidence bar. Adds the /jobsmith:tailor skill."
+    }
+  ]
+}

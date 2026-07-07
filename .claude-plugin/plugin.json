@@ -1,0 +1,12 @@
+{
+  "name": "jobsmith",
+  "description": "Tailor a résumé to a job by selecting your own accomplishments verbatim from a master bank, then looping it through a peer-review panel until every reviewer clears a confidence bar.",
+  "author": {
+    "name": "Steven Hajducko"
+  },
+  "homepage": "https://github.com/sjmh/tailoresume",
+  "repository": "https://github.com/sjmh/tailoresume",
+  "license": "MIT",
+  "keywords": ["resume", "cv", "job-application", "career", "tailoring"],
+  "skills": ["./skills/tailor"]
+}
