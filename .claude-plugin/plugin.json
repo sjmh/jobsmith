@@ -1,12 +1,12 @@
 {
   "name": "jobsmith",
-  "description": "Tailor a résumé to a job by selecting your own accomplishments verbatim from a master bank, then looping it through a peer-review panel until every reviewer clears a confidence bar.",
+  "description": "Hunt for jobs and tailor your résumé: a daily agent that sources postings, scores fit against a configurable rubric, auto-tailors your résumé for strong matches by selecting verbatim from a master bank, and serves a local morning digest.",
   "author": {
     "name": "Steven Hajducko"
   },
-  "homepage": "https://github.com/sjmh/tailoresume",
-  "repository": "https://github.com/sjmh/tailoresume",
+  "homepage": "https://github.com/sjmh/jobsmith",
+  "repository": "https://github.com/sjmh/jobsmith",
   "license": "MIT",
-  "keywords": ["resume", "cv", "job-application", "career", "tailoring"],
-  "skills": ["./skills/tailor"]
+  "keywords": ["resume", "cv", "job-application", "job-search", "career", "tailoring"],
+  "skills": ["./skills/tailor", "./skills/jobhunt"]
 }

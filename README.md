@@ -1,14 +1,47 @@
 # jobsmith
 
-A Claude Code plugin for **job applications**. Its first tool, `/jobsmith:tailor`,
-tailors a résumé to a specific job by **selecting your own real accomplishments
-verbatim** from a master experience bank (never inventing prose), then running the
-draft through a 4-persona peer-review panel that scores confidence 0–100 and loops
-the rewrite until every reviewer clears the bar.
+A Claude Code plugin for **job applications**. Two skills:
 
-Everything about *you* — name, master-bank location, confidentiality rules, whether
-you want a styled PDF — lives in a per-workspace `resume.config.json` that the skill
-creates interactively on first run. The plugin itself is generic and shareable.
+- **`/jobsmith:tailor`** — tailors a résumé to a specific job by **selecting your
+  own real accomplishments verbatim** from a master experience bank (never inventing
+  prose), then running the draft through a 4-persona peer-review panel that scores
+  confidence 0–100 and loops the rewrite until every reviewer clears the bar.
+- **`/jobsmith:jobhunt`** — a daily job hunt that **sources** fresh postings from job
+  boards, **scores** each against a configurable, extensible fit rubric,
+  **auto-tailors** your résumé for every job that clears the score bar, and serves a
+  local **morning digest** webpage tracking what's new, what got a résumé (with an
+  Apply button), what you've applied to, and what was rejected and why.
+
+Everything about *you* — name, master-bank location, sources, rubric, confidentiality
+rules — lives in per-workspace config files (`resume.config.json`, `jobhunt.config.json`)
+the skills create interactively on first run. The plugin itself is generic and shareable.
+
+## The daily job hunt
+
+Run it by hand or on a schedule:
+
+```
+/jobsmith:jobhunt
+```
+
+First run walks you through setup (sources to pull, companies to watch, the rubric +
+score bar, which tailor command to use) and writes `jobhunt.config.json`. Each run
+then: sources → dedupes (stable ids, so a posting is only ever "new" once) →
+dealbreaker-gates → scores → auto-tailors anything at/above the bar → records to
+`job-hunt/jobs.json` → serves the digest at `http://localhost:8123`.
+
+**Adding job sites is easy** — sourcing is a runner + auto-discovered adapters
+(`skills/jobhunt/scripts/adapters/`). Most sites are a one-line config entry
+(`greenhouse`/`lever`/`ashby`/`remoteok`/`weworkremotely`/`hn-whoishiring`/`json`/`rss`/`html`),
+and any URL at all works via the `webfetch` catch-all (e.g.
+`{ "type": "webfetch", "url": "https://devquest.gg/jobs" }`). See
+`skills/jobhunt/references/sources-reference.md`.
+
+**The rubric is extensible** — add or reweight scoring factors in
+`jobhunt.config.json` with no code change. See `skills/jobhunt/references/rubric-reference.md`.
+
+**Scheduling** — point a cron (e.g. the installed Hermes agent) at a wrapper that runs
+`claude -p "/jobsmith:jobhunt"` from your résumé workspace each morning.
 
 ## Install
 
@@ -39,16 +72,27 @@ jobsmith/                              (this repo — plugin + single-plugin mar
 │   ├── plugin.json                    plugin manifest (name: jobsmith)
 │   └── marketplace.json               marketplace catalog (source ./)
 └── skills/
-    └── tailor/                        the /jobsmith:tailor skill
-        ├── SKILL.md                   the workflow (draft → panel → loop → gate → render)
+    ├── tailor/                        the /jobsmith:tailor skill
+    │   ├── SKILL.md                   the workflow (draft → panel → loop → gate → render)
+    │   ├── references/
+    │   │   ├── setup.md               first-run interactive setup
+    │   │   ├── config-reference.md    every resume.config.json field + defaults
+    │   │   └── master-bank-template.md  starter template for your bullet bank
+    │   └── scripts/
+    │       ├── verbatim-check.js      anti-fabrication gate (bullets must be verbatim)
+    │       ├── render-cv.mjs          optional Markdown→HTML→PDF renderer
+    │       └── template.mjs           the single styling surface (edit to re-skin)
+    └── jobhunt/                       the /jobsmith:jobhunt skill
+        ├── SKILL.md                   the daily pipeline (source → dedupe → score → tailor → digest)
         ├── references/
         │   ├── setup.md               first-run interactive setup
-        │   ├── config-reference.md    every resume.config.json field + defaults
-        │   └── master-bank-template.md  starter template for your bullet bank
+        │   ├── config-reference.md    every jobhunt.config.json field + the jobs.json schema
+        │   ├── rubric-reference.md    the extensible scoring rubric + dealbreakers
+        │   └── sources-reference.md   the pluggable source framework + how to add a site
         └── scripts/
-            ├── verbatim-check.js      anti-fabrication gate (bullets must be verbatim)
-            ├── render-cv.mjs          optional Markdown→HTML→PDF renderer
-            └── template.mjs           the single styling surface (edit to re-skin)
+            ├── fetch-jobs.mjs         the source runner (dispatches to adapters, dedupes)
+            ├── server.mjs             the local digest web server (port 8123)
+            └── adapters/              one auto-discovered module per source type
 ```
 
 ## The core idea
