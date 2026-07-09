@@ -78,6 +78,7 @@ function slimJob(j) {
     url: j.url, source: j.source, remote: !!j.remote, watched: !!j.watched,
     score: j.score, breakdown: j.breakdown || null, rationale: j.rationale || "",
     decision: j.decision, status: j.status, cart: !!j.cart, dismissed: !!j.dismissed,
+    isNew: !!j.isNew, firstSeen: j.firstSeen || null,
     snippet: (j.description || "").replace(/\s+/g, " ").slice(0, 260),
     postedAt: j.postedAt || null,
   };

@@ -39,6 +39,8 @@
   .chip{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 12px;display:flex;flex-direction:column;min-width:96px}
   .chip b{font-size:19px;font-weight:700}
   .chip span{color:var(--muted);font-size:12px}
+  .chip.new b{color:var(--accent)}
+  .chip.new{border-color:var(--accent-dim)}
   .chip.good b{color:var(--accent)} .chip.gold b{color:var(--gold)} .chip.amber b{color:var(--amber)}
 
   .controls{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin:18px 0 8px;padding:14px 16px;background:var(--card);border:1px solid var(--line);border-radius:12px}
@@ -75,6 +77,7 @@
   .meta{color:var(--muted);font-size:12.5px;margin-top:3px;display:flex;flex-wrap:wrap;gap:5px 12px}
   .badge{font-size:11px;padding:1px 7px;border-radius:5px;background:var(--card2);border:1px solid var(--line);color:var(--muted)}
   .badge.remote{color:var(--accent);border-color:var(--accent-dim)}
+  .badge.new{color:#07100c;background:var(--accent);border-color:var(--accent);font-weight:700;letter-spacing:.03em}
   .rat{color:var(--muted);font-size:12.5px;margin-top:7px}
   .bars{display:none;gap:14px;margin-top:10px;flex-wrap:wrap}
   .card.open .bars{display:flex}
@@ -254,6 +257,7 @@ function jobCard(j){
     <div class="body">
       <div class="r1"><span class="co">${j.watched?'<span class="star">★</span> ':''}${esc(j.company)}</span> <span class="ttl">${esc(j.title)}</span></div>
       <div class="meta">
+        ${j.isNew?'<span class="badge new">✦ NEW</span>':''}
         <span class="badge ${j.remote?'remote':''}">${j.remote?'⚡ Remote':esc(fmtLoc(j))}</span>
         <span class="badge">${esc(j.source)}</span>
         ${j.location&&j.remote?`<span>${esc(j.location)}</span>`:''}
@@ -293,6 +297,7 @@ function render(){
     ${chip('good', watchedCleared.length+cleared.length,'clear the bar')}
     ${chip('gold', watchedCleared.length,'watched · cleared')}
     ${chip('amber', almost.length,'almost there')}
+    ${chip('new', jobs.filter(j=>j.isNew).length,'✦ new today')}
     ${chip('', jobs.length,'in play')}
     ${chip('', STATE.jobs.filter(j=>j.dismissed).length,'dismissed')}`;
 

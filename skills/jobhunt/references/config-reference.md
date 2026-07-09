@@ -14,7 +14,7 @@ may be absolute or relative to the config's directory.
                                     //   instead of generating résumés unattended
   "nearWindow": 10,                 // flag jobs within N points below the bar as "near"
   "dataDir": "job-hunt",            // where jobs.json + the digest live
-  "serverPort": 8123,               // local digest server port
+  "serverPort": 8124,               // local digest server port
 
   "sources": [                      // pluggable adapters — see sources-reference.md
     { "type": "greenhouse", "company": "discord" },
@@ -25,10 +25,22 @@ may be absolute or relative to the config's directory.
     { "type": "webfetch", "url": "https://devquest.gg/jobs" }
   ],
 
-  "searchQueries": [                // WebSearch queries the SKILL runs each morning
-    "senior backend engineer remote go",
-    "game engine / gameplay engineer remote"
+  "mcpSources": [                   // sources queried agent-side via connected MCP tools (Step 0)
+    { "type": "indeed", "enabled": true, "tool": "search_jobs", "location": "remote",
+      "queries": ["staff software engineer backend", "site reliability engineer golang"] }
   ],
+
+  "searchQueries": [                // open-web WebSearch queries; [] = disabled
+    "senior backend engineer remote go"
+  ],
+
+  "comp": {                         // feeds the scoring "company/comp" factor
+    "currency": "USD", "target": 220000, "floor": 150000
+  },
+  "locationPref": {                 // feeds the scoring "location" factor
+    "remotePreferred": true, "willingToRelocate": true,
+    "relocationTolerance": 0.4      // 0 = remote-only strict, 1 = location never penalized
+  },
 
   "watchedCompanies": ["Netflix", "Epic", "NVIDIA", "Anduril", "Riot"],
   "watchedScoreBump": 5,            // added to a watched job's score (capped 100)
@@ -68,7 +80,11 @@ may be absolute or relative to the config's directory.
 | `dataDir` | no | `"job-hunt"` |
 | `serverPort` | no | `8123` |
 | `sources[]` | **yes** | — (empty = nothing to hunt) |
-| `searchQueries[]` | no | `[]` |
+| `searchQueries[]` | no | `[]` (open-web WebSearch; empty = disabled) |
+| `mcpSources[]` | no | `[]` (agent-side MCP sources, e.g. Indeed; each `{type,enabled,tool,location,queries[]}`) |
+| `comp` | no | none (`{currency,target,floor}` — scoring input) |
+| `locationPref` | no | none (`{remotePreferred,willingToRelocate,relocationTolerance}` — scoring input) |
+| `prescreen` | no | built-in defaults (`{relevanceKeywords[],hardNegatives[],noisySources[]}` override the Step-1 relevance filter) |
 | `watchedCompanies[]` | no | `[]` |
 | `watchedScoreBump` | no | `0` |
 | `rubric.factors[]` | **yes** | the four seed factors (see rubric-reference.md) |
@@ -93,7 +109,10 @@ id, accumulated across days. Shape:
   "breakdown": [ { "key": "role", "label": "Role & seniority", "weight": 35, "score": 90 }, … ],
   "rationale": "Strong backend/Go fit, remote, comp undisclosed.",
   "near": false,             // scored within nearWindow just below the bar
-  "decision": "qualified",   // "qualified" (≥bar, not tailored) | "tailored" | "rejected" | "dealbreaker"
+  "isNew": true,             // first seen on this run (merge-jobs sets it; false once carried over)
+  "cart": false,             // user added it to the digest cart
+  "dismissed": false,        // user dismissed it in the digest
+  "decision": "qualified",   // "qualified" (≥bar, not tailored) | "tailored" | "rejected" | "dealbreaker" | "unscored"
   "resumeDir": "applications/senior-backend-acme",
   "resumePdf": "applications/senior-backend-acme/Steven_Hajducko_CV_Acme.pdf",
   "status": "tailored",      // "new" | "tailored" | "applied" | "dismissed"
