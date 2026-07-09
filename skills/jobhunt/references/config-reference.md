@@ -101,6 +101,8 @@ id, accumulated across days. Shape:
 }
 ```
 
-The digest server (`scripts/server.mjs`) is the only writer of `status`/`appliedAt`/
-`dismissedAt` at runtime (Apply / Dismiss / Undo); the morning SKILL run writes
-everything else. Both write atomically (temp + rename) to avoid clobbering.
+The digest server (`scripts/digest-server.mjs`, serving `scripts/digest.html`) is the
+runtime writer of the per-job `cart`/`dismissed` flags and of config edits made in the
+UI (search terms, rubric weights, watched companies, comp/location) — those persist back
+to `jobhunt.config.json` so they shape the next hunt. The morning SKILL run writes the
+scored records. Both write atomically (temp + rename) to avoid clobbering.

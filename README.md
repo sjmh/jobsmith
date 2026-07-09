@@ -91,7 +91,8 @@ jobsmith/                              (this repo — plugin + single-plugin mar
         │   └── sources-reference.md   the pluggable source framework + how to add a site
         └── scripts/
             ├── fetch-jobs.mjs         the source runner (dispatches to adapters, dedupes)
-            ├── server.mjs             the local digest web server (port 8123)
+            ├── digest-server.mjs      the local digest web server (default port 8124)
+            ├── digest.html            the interactive digest UI it serves
             └── adapters/              one auto-discovered module per source type
 ```
 

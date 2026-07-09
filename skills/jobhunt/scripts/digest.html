@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Job Hunt — Morning Digest</title>
+<style>
+  :root{
+    --bg:#0b0e12; --bg2:#0e1218; --card:#161b22; --card2:#1b212b; --line:#242c38;
+    --text:#e6edf3; --muted:#8b98a9; --faint:#5b6672;
+    --accent:#2ee6a6; --accent-dim:#1c8f68; --gold:#f5c451; --amber:#f0a24b;
+    --red2:#f2657a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  a{color:var(--accent);text-decoration:none}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+  header.top{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,var(--bg) 60%,rgba(11,14,18,.85));backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  .top .wrap{display:flex;align-items:center;gap:16px;padding:14px 20px}
+  .brand{font-weight:700;font-size:16px;letter-spacing:.2px;display:flex;align-items:center;gap:9px}
+  .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+  .brand small{color:var(--muted);font-weight:500}
+  .spacer{flex:1}
+  .btn{background:var(--card);border:1px solid var(--line);color:var(--text);padding:7px 12px;border-radius:9px;cursor:pointer;font-size:13px;display:inline-flex;align-items:center;gap:7px;transition:.12s}
+  .btn:hover{border-color:var(--accent-dim);background:var(--card2)}
+  .btn .pill{background:var(--accent);color:#04120c;border-radius:20px;padding:0 7px;font-weight:700;font-size:12px}
+  .btn.gold .pill{background:var(--gold);color:#241c02}
+
+  .hero{padding:26px 0 6px}
+  .hero h1{margin:0 0 4px;font-size:22px;font-weight:700}
+  .hero .sub{color:var(--muted)}
+  .srcline{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0 2px;align-items:center}
+  .srcline .lbl{color:var(--faint);font-size:12px;text-transform:uppercase;letter-spacing:.5px;margin-right:2px}
+  .spill{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:3px 10px;font-size:12.5px;color:var(--muted)}
+  .spill b{color:var(--text);font-weight:700}
+  .spill .cleared-n{color:var(--accent);font-weight:700}
+  .spill.indeed{border-color:var(--accent-dim)}
+  .chips{display:flex;flex-wrap:wrap;gap:9px;margin:16px 0 4px}
+  .chip{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 12px;display:flex;flex-direction:column;min-width:96px}
+  .chip b{font-size:19px;font-weight:700}
+  .chip span{color:var(--muted);font-size:12px}
+  .chip.good b{color:var(--accent)} .chip.gold b{color:var(--gold)} .chip.amber b{color:var(--amber)}
+
+  .controls{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin:18px 0 8px;padding:14px 16px;background:var(--card);border:1px solid var(--line);border-radius:12px}
+  .slider-group{display:flex;align-items:center;gap:12px;flex:1;min-width:280px}
+  .slider-group label{color:var(--muted);white-space:nowrap;font-size:13px}
+  input[type=range]{-webkit-appearance:none;height:5px;border-radius:5px;background:var(--line);outline:none;flex:1}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 0 0 4px rgba(46,230,166,.15)}
+  .thresh-val{font-weight:700;font-size:16px;color:var(--accent);min-width:30px;text-align:center}
+  .toggle{display:flex;align-items:center;gap:7px;color:var(--muted);cursor:pointer;font-size:13px;user-select:none}
+
+  section.bucket{margin:22px 0}
+  .bucket h2{display:flex;align-items:center;gap:10px;font-size:15px;margin:0 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .bucket h2 .n{color:var(--muted);font-weight:500}
+  .bucket h2 .tag{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;padding:2px 8px;border-radius:20px}
+  .tag.cleared{background:rgba(46,230,166,.13);color:var(--accent)}
+  .tag.watched{background:rgba(245,196,81,.14);color:var(--gold)}
+  .tag.almost{background:rgba(240,162,75,.14);color:var(--amber)}
+  .grid{display:grid;grid-template-columns:1fr;gap:11px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;gap:14px;align-items:flex-start;transition:.12s}
+  .card:hover{border-color:#31404f}
+  .card.w{border-color:rgba(245,196,81,.4);background:linear-gradient(90deg,rgba(245,196,81,.06),var(--card) 40%)}
+  .card.carted{border-color:var(--accent-dim);box-shadow:inset 3px 0 0 var(--accent)}
+  .score{flex:0 0 auto;width:52px;height:52px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:19px;border:1px solid var(--line);background:var(--bg2)}
+  .score.hi{color:var(--accent);border-color:var(--accent-dim)}
+  .score.mid{color:var(--amber);border-color:rgba(240,162,75,.4)}
+  .score.lo{color:var(--muted)}
+  .score small{font-size:9px;font-weight:600;color:var(--faint);text-transform:uppercase}
+  .body{flex:1;min-width:0}
+  .r1{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+  .co{font-weight:700}
+  .co .star{color:var(--gold)}
+  .ttl{color:var(--text)}
+  .meta{color:var(--muted);font-size:12.5px;margin-top:3px;display:flex;flex-wrap:wrap;gap:5px 12px}
+  .badge{font-size:11px;padding:1px 7px;border-radius:5px;background:var(--card2);border:1px solid var(--line);color:var(--muted)}
+  .badge.remote{color:var(--accent);border-color:var(--accent-dim)}
+  .rat{color:var(--muted);font-size:12.5px;margin-top:7px}
+  .bars{display:none;gap:14px;margin-top:10px;flex-wrap:wrap}
+  .card.open .bars{display:flex}
+  .fac{min-width:120px}
+  .fac .fl{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:3px}
+  .fac .track{height:5px;background:var(--line);border-radius:4px;overflow:hidden}
+  .fac .fill{height:100%;background:var(--accent);border-radius:4px}
+  .acts{display:flex;gap:7px;margin-top:11px;flex-wrap:wrap}
+  .mini{font-size:12px;padding:5px 10px;border-radius:8px;border:1px solid var(--line);background:var(--card2);color:var(--muted);cursor:pointer;transition:.12s}
+  .mini:hover{color:var(--text);border-color:#3a4756}
+  .mini.on{background:var(--accent);color:#04120c;border-color:var(--accent);font-weight:600}
+  .mini.dz:hover{color:var(--red2);border-color:var(--red2)}
+
+  .empty{color:var(--faint);font-size:13px;padding:8px 2px}
+  .showmore{color:var(--muted);cursor:pointer;font-size:13px;padding:8px 0}
+  .showmore:hover{color:var(--accent)}
+
+  /* drawers */
+  .drawer{position:fixed;top:0;right:0;height:100%;width:380px;max-width:92vw;background:var(--bg2);border-left:1px solid var(--line);transform:translateX(100%);transition:.22s;z-index:40;overflow-y:auto;padding:20px}
+  .drawer.open{transform:none;box-shadow:-24px 0 60px rgba(0,0,0,.5)}
+  .drawer h3{margin:0 0 4px;font-size:16px}
+  .drawer .close{position:absolute;top:16px;right:16px;cursor:pointer;color:var(--muted);font-size:20px;background:none;border:none}
+  .drawer .hint{color:var(--muted);font-size:12.5px;margin:0 0 18px}
+  .wrow{display:flex;align-items:center;gap:10px;margin:14px 0}
+  .wrow label{flex:0 0 84px;color:var(--muted);font-size:13px}
+  .wrow .val{flex:0 0 44px;text-align:right;font-weight:700;color:var(--accent)}
+  .wrow input[type=range]{flex:1}
+  .field{margin:12px 0}
+  .field label{display:block;color:var(--muted);font-size:12.5px;margin-bottom:5px}
+  .field input[type=text],.field input[type=number]{width:100%;background:var(--card);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 10px}
+  .chipset{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0 14px}
+  .wchip{background:rgba(245,196,81,.12);border:1px solid rgba(245,196,81,.35);color:var(--gold);border-radius:20px;padding:4px 10px;font-size:12.5px;display:flex;align-items:center;gap:6px}
+  .wchip button{background:none;border:none;color:var(--gold);cursor:pointer;font-size:14px;line-height:1;opacity:.7}
+  .wchip button:hover{opacity:1}
+  .savebar{position:sticky;bottom:0;background:var(--bg2);padding-top:12px;margin-top:16px;border-top:1px solid var(--line)}
+  .btn.primary{background:var(--accent);color:#04120c;border-color:var(--accent);font-weight:700;width:100%;justify-content:center}
+  .cartitem{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin-bottom:8px}
+  .cartitem .cx{font-size:12px;color:var(--muted)}
+  .note{background:rgba(46,230,166,.07);border:1px solid var(--accent-dim);border-radius:9px;padding:11px 12px;color:var(--text);font-size:12.5px;margin:12px 0}
+  .sgroup{margin:0 0 18px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+  .sgroup:last-child{border-bottom:none}
+  .sghead{font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:8px;margin-bottom:9px}
+  .sghead .sk{font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--faint);background:var(--card2);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-weight:600}
+  .sghead .son{color:var(--accent);font-size:11px;font-weight:700;margin-left:auto}
+  .sghead .soff{color:var(--faint);font-size:11px;font-weight:700;margin-left:auto}
+  .schip{background:rgba(46,230,166,.10);border:1px solid var(--accent-dim);color:var(--accent);border-radius:20px;padding:4px 10px;font-size:12.5px;display:flex;align-items:center;gap:6px}
+  .schip button{background:none;border:none;color:var(--accent);cursor:pointer;font-size:14px;line-height:1;opacity:.7;padding:0}
+  .schip button:hover{opacity:1}
+  .sgroup .field{margin:6px 0 0}
+  .sgroup .field input{font-size:13px}
+  .srchint{color:var(--faint);font-size:11.5px;margin:6px 0 0}
+  code{background:var(--card2);padding:1px 6px;border-radius:5px;color:var(--accent);font-size:12px}
+  .backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:.2s;z-index:35}
+  .backdrop.on{opacity:1;pointer-events:auto}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <div class="brand"><span class="dot"></span> Job Hunt <small>· Morning Digest</small></div>
+  <div class="spacer"></div>
+  <button class="btn" id="btnSearch">🔎 Searches</button>
+  <button class="btn" id="btnWatched">⭐ Watched</button>
+  <button class="btn" id="btnRubric">⚖️ Rubric</button>
+  <button class="btn gold" id="btnCart">🛒 Cart <span class="pill" id="cartN">0</span></button>
+</div></header>
+
+<div class="wrap">
+  <div class="hero">
+    <h1 id="heroTitle">Loading…</h1>
+    <div class="sub" id="heroSub"></div>
+    <div class="srcline" id="srcline"></div>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <div class="controls">
+    <div class="slider-group">
+      <label>Score bar</label>
+      <input type="range" id="thresh" min="40" max="100" step="1" />
+      <span class="thresh-val" id="threshV">80</span>
+    </div>
+    <label class="toggle"><input type="checkbox" id="showBelow" /> show below “almost there”</label>
+  </div>
+
+  <div id="sections"></div>
+  <div style="height:60px"></div>
+</div>
+
+<div class="backdrop" id="backdrop"></div>
+
+<!-- Rubric drawer -->
+<aside class="drawer" id="rubricDrawer">
+  <button class="close" data-close>×</button>
+  <h3>⚖️ Rubric weighting</h3>
+  <p class="hint">Drag weights to see every job re-score live. This is exactly how fit is judged — higher weight = matters more. Save writes it back to your config for future hunts.</p>
+  <div id="weights"></div>
+  <div class="wrow"><label>Watched bump</label><input type="range" id="wBump" min="0" max="15" step="1"><span class="val" id="wBumpV">5</span></div>
+  <hr style="border-color:var(--line);margin:18px 0">
+  <div class="wrow"><label>Relocation OK</label><input type="range" id="relTol" min="0" max="100" step="5"><span class="val" id="relTolV">40%</span></div>
+  <p class="hint" style="margin-top:-6px">0% = remote-only (on-site scored harshly). 100% = location never hurts a job.</p>
+  <div class="field"><label>Comp target (total, USD)</label><input type="number" id="compTarget" step="5000"></div>
+  <div class="field"><label>Comp floor (walk-away, USD)</label><input type="number" id="compFloor" step="5000"></div>
+  <p class="hint">Most postings don’t disclose pay; comp is judged inside the “Comp &amp; company” factor and used as context. These numbers are saved for reference &amp; scoring notes.</p>
+  <div class="wrow"><label>“Almost” window</label><input type="range" id="nearW" min="0" max="25" step="1"><span class="val" id="nearWV">10</span></div>
+  <div class="savebar"><button class="btn primary" id="saveRubric">Save to config</button></div>
+</aside>
+
+<!-- Watched drawer -->
+<aside class="drawer" id="watchedDrawer">
+  <button class="close" data-close>×</button>
+  <h3>⭐ Watched companies</h3>
+  <p class="hint">Watched companies are pinned to the top and highlighted — but only when a role actually clears the bar. Off-rubric jobs (sales, design, etc.) stay hidden.</p>
+  <div class="chipset" id="watchedChips"></div>
+  <div class="field"><label>Add a company</label><input type="text" id="watchedInput" placeholder="e.g. Valve, Anthropic…" /></div>
+  <button class="btn primary" id="addWatched">Add company</button>
+</aside>
+
+<!-- Search-terms drawer -->
+<aside class="drawer" id="searchDrawer">
+  <button class="close" data-close>×</button>
+  <h3>🔎 Search terms</h3>
+  <p class="hint">The exact keywords each source is queried with. Edits here change what the <b>next</b> hunt pulls — they don’t re-score jobs already found. Saved straight to your config.</p>
+  <div id="searchGroups"></div>
+</aside>
+
+<!-- Cart drawer -->
+<aside class="drawer" id="cartDrawer">
+  <button class="close" data-close>×</button>
+  <h3>🛒 Tailor cart</h3>
+  <p class="hint">Add jobs you want a tailored résumé for. Nothing is tailored automatically.</p>
+  <div class="note">When your cart is ready, tell Claude: <code>tailor my cart</code> — it’ll run the résumé panel only for these jobs.</div>
+  <div id="cartList"></div>
+</aside>
+
+<script>
+const $ = s => document.querySelector(s);
+let STATE=null, CFG=null, W={}, relTol=0.4, bump=5, bar=80, nearWindow=10;
+
+function effLocation(sub){ return sub + (100-sub)*relTol; }
+function liveScore(j){
+  if(!j.breakdown||!j.breakdown.length) return j.score ?? 0;
+  let num=0,den=0;
+  for(const b of j.breakdown){
+    const w = (W[b.key] ?? b.weight);
+    let s = b.key==='location' ? effLocation(b.score) : b.score;
+    num += s*w; den += w;
+  }
+  let t = den? Math.round(num/den):0;
+  if(j.watched) t = Math.min(100, t + bump);
+  return t;
+}
+const scoreClass = s => s>=bar?'hi':(s>=bar-nearWindow?'mid':'lo');
+
+async function api(path,method='GET',body){
+  const r = await fetch(path,{method,headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});
+  return r.json();
+}
+
+async function load(){
+  STATE = await api('/api/state');
+  CFG = STATE.config;
+  bar = CFG.bar; nearWindow = CFG.nearWindow; bump = CFG.watchedScoreBump||0;
+  relTol = (CFG.locationPref && CFG.locationPref.relocationTolerance!=null)? CFG.locationPref.relocationTolerance : 0.4;
+  W = {}; CFG.weights.forEach(w=>W[w.key]=w.weight);
+  $('#thresh').value = bar; $('#threshV').textContent = bar;
+  buildRubricDrawer(); buildWatchedDrawer(); buildSearchDrawer();
+  render();
+}
+
+function fmtLoc(j){ return j.remote? 'Remote' : (j.location||'—'); }
+
+function jobCard(j){
+  const s = liveScore(j);
+  const el = document.createElement('div');
+  el.className = 'card'+(j.watched?' w':'')+(j.cart?' carted':'');
+  el.innerHTML = `
+    <div class="score ${scoreClass(s)}">${s}<small>fit</small></div>
+    <div class="body">
+      <div class="r1"><span class="co">${j.watched?'<span class="star">★</span> ':''}${esc(j.company)}</span> <span class="ttl">${esc(j.title)}</span></div>
+      <div class="meta">
+        <span class="badge ${j.remote?'remote':''}">${j.remote?'⚡ Remote':esc(fmtLoc(j))}</span>
+        <span class="badge">${esc(j.source)}</span>
+        ${j.location&&j.remote?`<span>${esc(j.location)}</span>`:''}
+      </div>
+      <div class="rat">${esc(j.rationale||'')}</div>
+      <div class="bars">${(j.breakdown||[]).map(b=>{
+        const val = b.key==='location'?Math.round(effLocation(b.score)):b.score;
+        return `<div class="fac"><div class="fl"><span>${esc(b.label)} · w${W[b.key]??b.weight}</span><span>${val}</span></div><div class="track"><div class="fill" style="width:${val}%"></div></div></div>`;
+      }).join('')}</div>
+      <div class="acts">
+        <button class="mini cart ${j.cart?'on':''}" data-cart="${j.id}">${j.cart?'✓ In cart':'🛒 Add to cart'}</button>
+        <a class="mini" href="${j.url}" target="_blank" rel="noopener">↗ View posting</a>
+        <button class="mini why" data-why>ⓘ Breakdown</button>
+        <button class="mini dz" data-dismiss="${j.id}">✕ Dismiss</button>
+      </div>
+    </div>`;
+  el.querySelector('[data-why]').onclick = ()=> el.classList.toggle('open');
+  el.querySelector('[data-cart]').onclick = async e=>{ const on=!j.cart; await api('/api/cart','POST',{id:j.id,on}); j.cart=on; render(); openCartIfAny(); };
+  el.querySelector('[data-dismiss]').onclick = async ()=>{ await api('/api/dismiss','POST',{id:j.id,on:true}); j.dismissed=true; render(); };
+  return el;
+}
+function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function render(){
+  const jobs = STATE.jobs.filter(j=>!j.dismissed);
+  jobs.forEach(j=> j._s = liveScore(j));
+  const showBelow = $('#showBelow').checked;
+
+  const watchedCleared = jobs.filter(j=>j.watched && j._s>=bar).sort((a,b)=>b._s-a._s);
+  const wcIds = new Set(watchedCleared.map(j=>j.id));
+  const cleared = jobs.filter(j=>!wcIds.has(j.id) && j._s>=bar).sort((a,b)=>b._s-a._s);
+  const almost = jobs.filter(j=>j._s<bar && j._s>=bar-nearWindow).sort((a,b)=>b._s-a._s);
+  const below = jobs.filter(j=>j._s<bar-nearWindow).sort((a,b)=>b._s-a._s);
+
+  // chips
+  $('#chips').innerHTML = `
+    ${chip('good', watchedCleared.length+cleared.length,'clear the bar')}
+    ${chip('gold', watchedCleared.length,'watched · cleared')}
+    ${chip('amber', almost.length,'almost there')}
+    ${chip('', jobs.length,'in play')}
+    ${chip('', STATE.jobs.filter(j=>j.dismissed).length,'dismissed')}`;
+
+  const S = $('#sections'); S.innerHTML='';
+  S.appendChild(sectionEl('watched','⭐ Watched · cleared the bar', watchedCleared, 'These companies you’re tracking — shown only because a role here actually clears your bar.'));
+  S.appendChild(sectionEl('cleared','✅ Cleared the bar', cleared));
+  S.appendChild(sectionEl('almost','🟡 Almost there', almost, `Within ${nearWindow} points of the bar — nudge a weight or the bar to pull them in.`));
+  if(showBelow) S.appendChild(sectionEl('below','· Below the cut', below));
+  else if(below.length){
+    const more = document.createElement('div'); more.className='showmore';
+    more.textContent = `+ ${below.length} more below the “almost there” line — check “show below” to reveal`;
+    more.onclick=()=>{ $('#showBelow').checked=true; render(); };
+    S.appendChild(more);
+  }
+  $('#cartN').textContent = STATE.jobs.filter(j=>j.cart).length;
+  renderSources();
+  renderCart();
+}
+function chip(cls,n,label){ return `<div class="chip ${cls}"><b>${n}</b><span>${label}</span></div>`; }
+function renderSources(){
+  const bySrc = {};
+  for(const j of STATE.jobs){
+    const s = j.source || 'other';
+    if(!bySrc[s]) bySrc[s] = { total:0, cleared:0 };
+    bySrc[s].total++;
+    if(!j.dismissed && liveScore(j) >= bar) bySrc[s].cleared++;
+  }
+  const order = Object.entries(bySrc).sort((a,b)=>b[1].total-a[1].total);
+  $('#srcline').innerHTML = `<span class="lbl">Sources</span>` + order.map(([s,c])=>{
+    const isIndeed = /indeed/i.test(s);
+    return `<span class="spill${isIndeed?' indeed':''}" title="${c.cleared} clear the bar">${isIndeed?'🟦 ':''}${esc(s)} <b>${c.total}</b>${c.cleared?` <span class="cleared-n">· ${c.cleared}✓</span>`:''}</span>`;
+  }).join('');
+}
+function sectionEl(kind,title,list,desc){
+  const sec=document.createElement('section'); sec.className='bucket';
+  const tag = kind==='watched'?'watched':kind==='almost'?'almost':kind==='cleared'?'cleared':'';
+  sec.innerHTML = `<h2>${tag?`<span class="tag ${tag}">${kind}</span>`:''} ${title} <span class="n">· ${list.length}</span></h2>`;
+  if(desc && list.length) { const d=document.createElement('div'); d.className='empty'; d.style.marginTop='-4px'; d.textContent=desc; sec.appendChild(d); }
+  const g=document.createElement('div'); g.className='grid';
+  if(!list.length){ const e=document.createElement('div'); e.className='empty'; e.textContent='Nothing here right now.'; g.appendChild(e); }
+  list.forEach(j=>g.appendChild(jobCard(j)));
+  sec.appendChild(g); return sec;
+}
+
+/* ---- header info ---- */
+function setHeader(){
+  const total = STATE.jobs.length;
+  $('#heroTitle').textContent = `${total} roles sourced · ${STATE.jobs.filter(j=>!j.dismissed && liveScore(j)>=bar).length} clear the bar`;
+  $('#heroSub').textContent = `From your approved sources. Nothing is tailored until you add it to the cart.`;
+}
+
+/* ---- rubric drawer ---- */
+function buildRubricDrawer(){
+  const box = $('#weights'); box.innerHTML='';
+  CFG.weights.forEach(w=>{
+    const row=document.createElement('div'); row.className='wrow';
+    row.innerHTML=`<label title="${esc(w.guidance||'')}">${esc(w.label)}</label><input type="range" min="0" max="60" step="1" value="${w.weight}" data-wk="${w.key}"><span class="val" data-wv="${w.key}">${w.weight}</span>`;
+    box.appendChild(row);
+    row.querySelector('input').oninput=e=>{ W[w.key]=+e.target.value; row.querySelector('[data-wv]').textContent=e.target.value; setHeader(); render(); };
+  });
+  $('#wBump').value=bump; $('#wBumpV').textContent=bump;
+  $('#wBump').oninput=e=>{ bump=+e.target.value; $('#wBumpV').textContent=bump; setHeader(); render(); };
+  $('#relTol').value=Math.round(relTol*100); $('#relTolV').textContent=Math.round(relTol*100)+'%';
+  $('#relTol').oninput=e=>{ relTol=+e.target.value/100; $('#relTolV').textContent=e.target.value+'%'; setHeader(); render(); };
+  $('#nearW').value=nearWindow; $('#nearWV').textContent=nearWindow;
+  $('#nearW').oninput=e=>{ nearWindow=+e.target.value; $('#nearWV').textContent=nearWindow; render(); };
+  if(CFG.comp){ $('#compTarget').value=CFG.comp.target||''; $('#compFloor').value=CFG.comp.floor||''; }
+}
+$('#saveRubric').onclick=async()=>{
+  const weights=CFG.weights.map(w=>({key:w.key,weight:W[w.key]}));
+  await api('/api/config','POST',{
+    weights, watchedScoreBump:bump, nearWindow,
+    bar:+$('#thresh').value,
+    locationPref:{relocationTolerance:relTol},
+    comp:{target:+$('#compTarget').value||undefined, floor:+$('#compFloor').value||undefined}
+  });
+  $('#saveRubric').textContent='✓ Saved'; setTimeout(()=>$('#saveRubric').textContent='Save to config',1400);
+};
+
+/* ---- search-terms drawer ---- */
+function buildSearchDrawer(){
+  const box=$('#searchGroups'); box.innerHTML='';
+  const noun = k => k==='tags'?'tag' : k==='keywords'?'keyword' : 'search phrase';
+  (STATE.searchTerms||[]).forEach(g=>{
+    const sec=document.createElement('div'); sec.className='sgroup';
+    if(!g.present){
+      sec.innerHTML=`<div class="sghead">${esc(g.label)} <span class="sk">${esc(g.kind)}</span></div>
+        <div class="srchint">Not configured as a source — nothing to query here.</div>`;
+      box.appendChild(sec); return;
+    }
+    const flag = g.group==='searchQueries'||g.group==='indeed'
+      ? `<span class="${g.enabled?'son':'soff'}">${g.enabled?'on':'off'}</span>` : '';
+    const head=document.createElement('div'); head.className='sghead';
+    head.innerHTML=`${esc(g.label)} <span class="sk">${esc(g.kind)}</span> ${flag}`;
+    sec.appendChild(head);
+
+    const chips=document.createElement('div'); chips.className='chipset';
+    if(!g.terms.length){ const e=document.createElement('span'); e.className='empty'; e.textContent='No terms yet.'; chips.appendChild(e); }
+    g.terms.forEach(t=>{
+      const el=document.createElement('span'); el.className='schip';
+      el.innerHTML=`${esc(t)} <button title="remove">×</button>`;
+      el.querySelector('button').onclick=async()=>{ await api('/api/search-terms','POST',{group:g.group,action:'remove',term:t}); await reloadKeepDrawers(); };
+      chips.appendChild(el);
+    });
+    sec.appendChild(chips);
+
+    const f=document.createElement('div'); f.className='field';
+    f.innerHTML=`<input type="text" placeholder="Add a ${noun(g.kind)}, then press Enter…">`;
+    const inp=f.querySelector('input');
+    inp.addEventListener('keydown',async e=>{
+      if(e.key!=='Enter') return;
+      const v=inp.value.trim(); if(!v) return; inp.value='';
+      await api('/api/search-terms','POST',{group:g.group,action:'add',term:v}); await reloadKeepDrawers();
+    });
+    sec.appendChild(f);
+
+    if(g.group==='indeed'){
+      const lf=document.createElement('div'); lf.className='field';
+      lf.innerHTML=`<label>Indeed location</label><input type="text" value="${esc(g.location||'')}" placeholder="e.g. Remote (United States)">`;
+      const li=lf.querySelector('input');
+      const save=async()=>{ await api('/api/search-terms','POST',{group:'indeed',location:li.value}); };
+      li.addEventListener('keydown',e=>{ if(e.key==='Enter') li.blur(); });
+      li.addEventListener('blur',save);
+      sec.appendChild(lf);
+    }
+    if(g.group==='searchQueries'){
+      const n=document.createElement('div'); n.className='srchint';
+      n.textContent='Open-web search runs only when this list has terms. Leave it empty to keep it off.';
+      sec.appendChild(n);
+    }
+    box.appendChild(sec);
+  });
+}
+
+/* ---- watched drawer ---- */
+function buildWatchedDrawer(){
+  const box=$('#watchedChips'); box.innerHTML='';
+  (CFG.watchedCompanies||[]).forEach(c=>{
+    const el=document.createElement('span'); el.className='wchip';
+    el.innerHTML=`⭐ ${esc(c)} <button title="remove">×</button>`;
+    el.querySelector('button').onclick=async()=>{ await api('/api/watched','POST',{company:c,action:'remove'}); await reloadKeepDrawers(); };
+    box.appendChild(el);
+  });
+}
+$('#addWatched').onclick=async()=>{
+  const v=$('#watchedInput').value.trim(); if(!v)return;
+  await api('/api/watched','POST',{company:v,action:'add'}); $('#watchedInput').value=''; await reloadKeepDrawers();
+};
+$('#watchedInput').addEventListener('keydown',e=>{ if(e.key==='Enter')$('#addWatched').click(); });
+async function reloadKeepDrawers(){ const open=[...document.querySelectorAll('.drawer.open')].map(d=>d.id); await load(); open.forEach(id=>$('#'+id).classList.add('open')); if(open.length)$('#backdrop').classList.add('on'); }
+
+/* ---- cart ---- */
+function renderCart(){
+  const items = STATE.jobs.filter(j=>j.cart);
+  const box=$('#cartList');
+  if(!items.length){ box.innerHTML='<div class="empty">Cart is empty.</div>'; return; }
+  box.innerHTML = items.map(j=>`<div class="cartitem"><b>${esc(j.company)}</b> — ${esc(j.title)}<div class="cx">fit ${liveScore(j)} · ${esc(j.source)}</div></div>`).join('');
+}
+function openCartIfAny(){}
+
+/* ---- drawers open/close ---- */
+function openDrawer(id){ closeDrawers(); $('#'+id).classList.add('open'); $('#backdrop').classList.add('on'); }
+function closeDrawers(){ document.querySelectorAll('.drawer').forEach(d=>d.classList.remove('open')); $('#backdrop').classList.remove('on'); }
+$('#btnRubric').onclick=()=>openDrawer('rubricDrawer');
+$('#btnWatched').onclick=()=>openDrawer('watchedDrawer');
+$('#btnSearch').onclick=()=>openDrawer('searchDrawer');
+$('#btnCart').onclick=()=>openDrawer('cartDrawer');
+$('#backdrop').onclick=closeDrawers;
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeDrawers);
+document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeDrawers(); });
+
+$('#thresh').oninput=e=>{ bar=+e.target.value; $('#threshV').textContent=bar; setHeader(); render(); };
+$('#showBelow').onchange=render;
+
+load().then(setHeader);
+</script>
+</body>
+</html>

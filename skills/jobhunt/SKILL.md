@@ -163,7 +163,7 @@ explicitly asks.
 2. **Ensure the digest server is running.** Check `config.serverPort` (default
    8123); if nothing is listening, start it detached:
    ```
-   node ${CLAUDE_PLUGIN_ROOT}/skills/jobhunt/scripts/server.mjs <dataDir>/jobs.json --port <serverPort>
+   node ${CLAUDE_PLUGIN_ROOT}/skills/jobhunt/scripts/digest-server.mjs <dataDir>/jobs.json --config jobhunt.config.json --port <serverPort>
    ```
 3. **Report** a one-screen summary: counts (new today / tailored / rejected /
    dealbreaker / errors), the watched-company hits, the top few tailored jobs with
