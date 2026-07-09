@@ -13,10 +13,13 @@
 // so a concurrent pipeline reader never sees a half-written file.
 //
 // Data store: an ARRAY of records shaped like —
-//   { id, title, company, url, source, watched, firstSeen, lastSeen, score,
+//   { id, title, company, url, source, watched, near, firstSeen, lastSeen, score,
 //     breakdown:[{key,label,weight,score}], rationale,
-//     decision:"tailored"|"rejected"|"dealbreaker", resumeDir, resumePdf,
-//     status:"new"|"tailored"|"applied"|"dismissed", appliedAt, dismissedAt }
+//     decision:"qualified"|"tailored"|"rejected"|"dealbreaker", resumeDir, resumePdf,
+//     status:"new"|"qualified"|"tailored"|"applied"|"dismissed", appliedAt, dismissedAt }
+//
+// "qualified" = scored at/above the bar but not auto-tailored (autoTailor off):
+// the digest shows these in "Ready to review" with a one-click copy-tailor button.
 // The `id` (sha1 hex string) is the primary key for all mutations.
 //
 // No external dependencies — Node 18+ standard library only.
@@ -73,8 +76,12 @@ function writeJobs(jobs) {
 }
 
 // The base status a record reverts to when an Apply/Dismiss is undone. Tailored
-// jobs go back to "tailored"; everything else back to "new".
-const baseStatus = job => (job.decision === 'tailored' ? 'tailored' : 'new');
+// or qualified (scored ≥ bar but not yet tailored) jobs go back to their own
+// state; everything else back to "new".
+const baseStatus = job =>
+  job.decision === 'tailored' ? 'tailored'
+  : job.decision === 'qualified' ? 'qualified'
+  : 'new';
 
 // ── HTTP helpers ────────────────────────────────────────────────────────────
 function sendJson(res, code, obj) {
@@ -289,6 +296,7 @@ header.top{margin-bottom:22px}
   font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;
   background:var(--accent);color:#fff;
 }
+.badge.ghost{background:transparent;color:var(--amber);border:1px solid var(--amber)}
 .pill{
   font-size:12.5px;font-weight:700;padding:3px 10px;border-radius:20px;
   white-space:nowrap;font-variant-numeric:tabular-nums;
@@ -371,6 +379,16 @@ function fmtDate(iso){
 let JOBS = [];        // the loaded array from /api/jobs
 let bar = 70;         // client-side score-bar cutoff
 
+// Slash command the user runs to tailor a résumé on demand (autoTailor:false flow).
+const TAILOR_CMD = "/jobsmith:tailor";
+// A job sits in the actionable "ready" area when it's tailored or qualified.
+const isReady = j => j && (j.decision === "tailored" || j.decision === "qualified");
+// Status a record reverts to when Apply/Dismiss is undone.
+const baseOf = j => !j ? "new"
+  : j.decision === "tailored" ? "tailored"
+  : j.decision === "qualified" ? "qualified"
+  : "new";
+
 // ── data load ────────────────────────────────────────────────────────────────
 async function load(){
   const res = await fetch("/api/jobs");
@@ -383,10 +401,12 @@ async function load(){
 // Default the bar to the highest score among tailored jobs (the natural cutoff
 // the pipeline already used), so it starts somewhere meaningful.
 function initBar(){
+  // Prefer the configured bar (min score among ready jobs) so the cutoff starts
+  // where the pipeline drew the line.
   const scores = JOBS
-    .filter(j => j && j.decision === "tailored" && typeof j.score === "number")
+    .filter(j => isReady(j) && typeof j.score === "number")
     .map(j => j.score);
-  bar = scores.length ? Math.max(...scores) : 70;
+  bar = scores.length ? Math.min(...scores) : 70;
   $("#barrange").value = bar;
   $("#barnum").value = bar;
   $("#barval").textContent = bar;
@@ -423,7 +443,7 @@ async function doUnapply(id){
   const r = await post("/api/unapply", id);
   if (r && r.ok){
     const j = JOBS.find(x => x && x.id === id);
-    const base = j && j.decision === "tailored" ? "tailored" : "new";
+    const base = baseOf(j);
     setLocal(id, {status:base, appliedAt:null});
   }
 }
@@ -431,7 +451,7 @@ async function doUndismiss(id){
   const r = await post("/api/undismiss", id);
   if (r && r.ok){
     const j = JOBS.find(x => x && x.id === id);
-    const base = j && j.decision === "tailored" ? "tailored" : "new";
+    const base = baseOf(j);
     setLocal(id, {status:base, dismissedAt:null});
   }
 }
@@ -476,10 +496,18 @@ function cardHtml(j, variant){
   if (variant === "review" || variant === "rejected") body += breakdownHtml(j);
   if (j.rationale) body += '<p class="rationale">'+esc(j.rationale)+'</p>';
 
+  // Qualified = scored ≥ bar but not yet tailored (autoTailor off): flag it and
+  // offer a one-click "copy tailor command" instead of a résumé link.
+  if (variant === "review" && j.decision === "qualified") badges.push('<span class="badge ghost">needs tailoring</span>');
+
   let actions = "";
   if (variant === "review"){
-    actions = '<button class="btn primary" data-act="apply" data-id="'+esc(j.id)+'">Apply</button>'
-            + '<button class="btn" data-act="dismiss" data-id="'+esc(j.id)+'">Dismiss</button>';
+    actions = '<button class="btn primary" data-act="apply" data-id="'+esc(j.id)+'">Apply</button>';
+    if (j.decision === "tailored" && j.resumePdf)
+      actions += '<a class="btn view" href="file:///'+esc(j.resumePdf)+'" target="_blank">Résumé PDF</a>';
+    else if (j.decision === "qualified")
+      actions += '<button class="btn" data-act="tailor" data-id="'+esc(j.id)+'">Copy tailor cmd</button>';
+    actions += '<button class="btn" data-act="dismiss" data-id="'+esc(j.id)+'">Dismiss</button>';
   } else if (variant === "applied"){
     actions = (j.url ? '<a class="btn view" href="'+esc(j.url)+'" target="_blank">View posting</a>' : "")
             + '<button class="btn link" data-act="unapply" data-id="'+esc(j.id)+'">Undo</button>';
@@ -532,16 +560,19 @@ function render(){
 
   // buckets
   const watched  = JOBS.filter(j => j && j.watched === true);
-  const ready    = JOBS.filter(j => j && j.decision === "tailored" && isActive(j));
+  const ready    = JOBS.filter(j => isReady(j) && isActive(j));
   const applied  = JOBS.filter(j => j && isApplied(j));
   const rejected = JOBS.filter(j => j && (j.decision === "rejected" || j.decision === "dealbreaker") && isActive(j));
   const dismissed= JOBS.filter(j => j && isDismissed(j));
 
   // summary chips
   const nRejected = JOBS.filter(j => j && (j.decision==="rejected"||j.decision==="dealbreaker")).length;
+  const nTailored = JOBS.filter(j => j && j.decision==="tailored").length;
+  const nNewToday = JOBS.filter(j => j && j.status==="new" && isReady(j)).length;
   $("#chips").innerHTML =
-      chip(ready.length, "New today", true)
-    + chip(ready.length, "Résumé ready")
+      chip(nNewToday, "New today", true)
+    + chip(ready.length, "Ready to review")
+    + chip(nTailored, "Résumé ready")
     + chip(applied.length, "Applied")
     + chip(nRejected, "Rejected");
 
@@ -554,11 +585,11 @@ function render(){
       sectionHtml("watched", "★ Watched companies",
         "Roles at companies you're tracking — spotlighted regardless of status.",
         watched.map(j => cardHtml(j, "watched")), watched.length === 0)
-    + sectionHtml("ready", "New today / Résumé ready",
-        "Tailored and worth a look (score ≥ bar of " + bar + ").",
+    + sectionHtml("ready", "Ready to review",
+        "Scored at or above the bar of " + bar + ". Tailored ones have a résumé; the rest have a one-click tailor command.",
         atOrAbove.map(j => cardHtml(j, "review")), false)
     + (below.length
-        ? sectionHtml("belowbar", "Below bar", "Tailored but under your current score bar.",
+        ? sectionHtml("belowbar", "Below bar", "Above zero but under your current score bar.",
             below.map(j => cardHtml(j, "review")), true)
         : "")
     + sectionHtml("applied", "Applied", "",
@@ -590,6 +621,13 @@ document.addEventListener("click", e => {
   else if (act === "dismiss") doDismiss(id);
   else if (act === "unapply") doUnapply(id);
   else if (act === "undismiss") doUndismiss(id);
+  else if (act === "tailor"){
+    const j = JOBS.find(x => x && x.id === id);
+    const cmd = TAILOR_CMD + " " + (j && j.url || "");
+    const done = () => { const t = btn.textContent; btn.textContent = "Copied ✓"; setTimeout(() => { btn.textContent = t; }, 1400); };
+    if (navigator.clipboard) navigator.clipboard.writeText(cmd).then(done).catch(() => window.prompt("Copy this command:", cmd));
+    else window.prompt("Copy this command:", cmd);
+  }
 });
 
 // bar control — keep range + number in sync, re-render on change (instant)

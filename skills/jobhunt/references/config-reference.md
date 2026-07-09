@@ -8,7 +8,11 @@ may be absolute or relative to the config's directory.
 
 ```jsonc
 {
-  "bar": 80,                        // auto-tailor threshold, 0–100 (Step 4)
+  "bar": 80,                        // qualify / auto-tailor threshold, 0–100 (Step 4)
+  "autoTailor": true,               // false = score & record only; the digest shows
+                                    //   qualified jobs with a one-click tailor command
+                                    //   instead of generating résumés unattended
+  "nearWindow": 10,                 // flag jobs within N points below the bar as "near"
   "dataDir": "job-hunt",            // where jobs.json + the digest live
   "serverPort": 8123,               // local digest server port
 
@@ -59,6 +63,8 @@ may be absolute or relative to the config's directory.
 | Field | Required | Default |
 | --- | --- | --- |
 | `bar` | no | `80` |
+| `autoTailor` | no | `true` (false → qualify & record, tailor on demand) |
+| `nearWindow` | no | `10` |
 | `dataDir` | no | `"job-hunt"` |
 | `serverPort` | no | `8123` |
 | `sources[]` | **yes** | — (empty = nothing to hunt) |
@@ -86,7 +92,8 @@ id, accumulated across days. Shape:
   "score": 84,               // null for dealbreaker records
   "breakdown": [ { "key": "role", "label": "Role & seniority", "weight": 35, "score": 90 }, … ],
   "rationale": "Strong backend/Go fit, remote, comp undisclosed.",
-  "decision": "tailored",    // "tailored" | "rejected" | "dealbreaker"
+  "near": false,             // scored within nearWindow just below the bar
+  "decision": "qualified",   // "qualified" (≥bar, not tailored) | "tailored" | "rejected" | "dealbreaker"
   "resumeDir": "applications/senior-backend-acme",
   "resumePdf": "applications/senior-backend-acme/Steven_Hajducko_CV_Acme.pdf",
   "status": "tailored",      // "new" | "tailored" | "applied" | "dismissed"
