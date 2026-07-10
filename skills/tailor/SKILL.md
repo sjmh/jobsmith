@@ -156,7 +156,12 @@ Rules for the draft (these are the heart of the skill):
   categories together, keep the section tight (roughly 5–7 rows), and prefer
   proving a competency in an experience bullet over listing it as a vague skill
   (a bare "distributed microservices" line reads as filler; the bullets prove it).
-- **Personal projects** (if the bank has them) are used verbatim.
+  Don't over-correct, though: keep the delivery and tooling skills a role
+  genuinely relies on even when the JD doesn't spell them out — e.g. CI/CD and
+  deployment tooling for any backend services role.
+- **Personal projects** (if the bank has them) are **all** included, verbatim
+  (tag stripped) — the bank's project list is a small curated set, so include
+  every entry, not a subset. Only drop one if the page is genuinely overflowing.
 - **Profile paragraph:** if a reusable-profile source is configured, reuse the
   closest-matching copy and lightly tailor only the lead/closing to the JD. If
   not, write a profile that restates *only facts already present in the bank* —
