@@ -123,7 +123,9 @@ function renderCvHtml(markdown, { role }) {
     } else if (section === 'PERSONAL PROJECTS' || section === 'PROJECTS') {
       const rows = [];
       while (i < lines.length && !lines[i].startsWith('## ')) {
-        const m = lines[i].trim().match(/^- \*\*(.+?):\*\*\s*(.*)$/);
+        // Accept both `- **Key:** value` (colon inside bold) and the master-bank
+        // style `- **name** — value` / `- **name** value` (separator outside bold).
+        const m = lines[i].trim().match(/^- \*\*(.+?):?\*\*\s*[—–:-]?\s*(.*)$/);
         if (m) rows.push(`<div class="row"><div class="row-key">${esc(m[1])}</div><div class="row-val">${esc(m[2])}</div></div>`);
         i++;
       }
