@@ -19,7 +19,7 @@ itself stays generic. All fields have defaults; a minimal config only needs
     "Never disclose <specific thing>; refer to it only as <approved phrasing>."
   ],
   "review": { "bar": 85, "maxRounds": 3, "panelSize": 4 },
-  "signature": { "marker": "+" },
+  "signature": { "marker": "+", "min": 1, "max": 2 },
   "render": {
     "enabled": true,
     "command": "node {skillDir}/scripts/render-cv.mjs {cv} {out} --role \"{role}\"",
@@ -42,7 +42,9 @@ itself stays generic. All fields have defaults; a minimal config only needs
 | `review.bar` | Confidence threshold (0–100) every reviewer must clear. | `85` |
 | `review.maxRounds` | Max review→rewrite rounds before shipping regardless. | `3` |
 | `review.panelSize` | Number of reviewers on the panel. | `4` |
-| `signature.marker` | Character that, inside a bank bullet's tag (e.g. `` `[Game +]` ``), flags a crown-jewel accomplishment that is **always** included on every CV. Set to `""` to disable the whole signature feature. | `"+"` |
+| `signature.marker` | Character used inside a bank bullet's tag to flag a standout accomplishment. Doubled (`++`) = **mandatory**, always on every CV; single (`+`) = **priority** highlight (see below). Set to `""` to disable the whole signature feature. | `"+"` |
+| `signature.min` | Minimum number of single-marker (`+`) *priority* bullets to carry on each CV — a soft floor (mandatory `++` bullets don't count toward it). | `1` |
+| `signature.max` | Maximum number of single-marker (`+`) *priority* bullets to include — a ceiling for the priority tier only (`++` bullets are uncapped). | `2` |
 | `render.enabled` | Whether to produce styled HTML + PDF. If `false`, the tailored `.md` is the deliverable. | `false` |
 | `render.command` | Shell command template. `{skillDir}` `{cv}` `{out}` `{role}` are substituted. | bundled renderer |
 | `render.template` | Styling module the renderer uses (edit to re-skin). | bundled `template.mjs` |
@@ -62,20 +64,27 @@ A workspace that already has its own renderer (like a Puppeteer project) can poi
 
 ## Signature bullets (crown jewels)
 
-Some accomplishments are headline material regardless of the role — you want them
-to appear on *every* CV even when their specialty is off from the target job. Mark
-those in the master bank by putting `signature.marker` **inside the bullet's
-tag** — with the default marker `+`:
+Some accomplishments are headline material. Mark them in the master bank by
+putting `signature.marker` **inside the bullet's tag** — how many times you repeat
+it sets the tier:
 
 ```
-- `[Game +]` Powered the game's free-to-play monetization as lead engineer...
-- `[Backend · Game +]` Co-led the mobile platform that shipped three titles...
+- `[Backend · Game ++]` Co-led the mobile platform that shipped three titles...   # mandatory
+- `[Game +]` Powered the game's free-to-play monetization as lead engineer...     # priority
 ```
 
-**Every marked bullet is always included on every CV** — no sampling, no ceiling.
-The candidate marked them precisely because they're crown jewels that should show
-up everywhere, even a `` `[Game +]` `` bullet on a backend CV. If many bullets are
-marked, the skill trims ordinary bullets to make room rather than dropping any
-signature bullet. The marker is part of the tag, so it is stripped (along with the
-tag) when the bullet is placed, and the verbatim gate ignores it. Set
-`signature.marker` to `""` to turn the feature off entirely.
+**Two tiers:**
+
+- **`++` (marker doubled) — mandatory.** Always included on *every* CV, no cap,
+  even when the bullet's track is off from the target role. Reserve this for the
+  one or two accomplishments that define the candidate and should appear
+  everywhere.
+- **`+` (marker once) — priority highlight.** Strongly preferred when the skill
+  chooses which bullets to feature. Each CV carries between `signature.min` and
+  `signature.max` of them (a soft floor/ceiling), preferring on-track ones; a `+`
+  bullet may be left off if it's genuinely off-track and space is tight. Mandatory
+  `++` bullets don't count toward this min/max.
+
+The marker is part of the tag, so it is stripped (along with the tag) when the
+bullet is placed, and the verbatim gate ignores it. Set `signature.marker` to
+`""` to turn the feature off entirely.

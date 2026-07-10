@@ -40,13 +40,15 @@ questions (rendering, styling) and plain prompts for free-text (name, paths).
    on request → `review`.
 
 7. **Signature bullets (optional).** "Do you have crown-jewel accomplishments
-   you'd want on *every* CV, even when the role's specialty is a bit off?" If yes,
-   explain they mark those in the bank by putting the signature marker inside the
-   bullet's tag (default `+`, e.g. `` `[Game +]` ``), and **every marked bullet is
-   always included** on every CV. Keep the default marker unless they want a
-   different character → `signature`. If they don't want the feature, set
-   `signature.marker` to `""` (or omit the block and note it's off by default only
-   when no marked bullets exist — the default marker is `+`).
+   you'd want featured on every CV?" If yes, explain the two tiers, both marked
+   inside the bullet's tag (default marker `+`): a **doubled** marker (`++`, e.g.
+   `` `[Backend · Game ++]` ``) means *always included, even off-track*; a
+   **single** marker (`+`, e.g. `` `[Game +]` ``) means *priority highlight* —
+   preferred, with a soft floor/ceiling of `signature.min`–`signature.max`. Keep
+   the defaults (marker `+`, min 1, max 2) unless they want different values →
+   `signature`. If they don't want the feature, set `signature.marker` to `""`
+   (or omit the block and note it's off by default only when no marked bullets
+   exist — the default marker is `+`).
 
 8. **Rendering.** Ask: "Do you want a styled HTML + PDF, or just the Markdown CV?"
    - **Markdown only** → `render.enabled: false`. Done.

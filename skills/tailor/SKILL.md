@@ -125,16 +125,27 @@ Rules for the draft (these are the heart of the skill):
   strip the tag when placing the bullet. Select the bullets that best hit this
   JD's priorities.
 - **Signature bullets (crown jewels).** If `config.signature.marker` is set
-  (default `+`) and non-empty, treat any bank bullet whose tag *contains that
-  marker* (e.g. `` `[Game +]` ``, `` `[Backend · Game +]` ``) as a signature
-  accomplishment. **Every signature bullet is ALWAYS included on every assembled
-  CV — no exceptions — even one whose track is off from the target role** (e.g. a
-  `` `[Game +]` `` bullet on a backend CV). Signature bullets are mandatory, not a
-  pool to sample from; the candidate marked them precisely because they want them
-  to appear everywhere. Place them where they read best (usually near the top of
-  their role), and strip the marker along with the tag when placing them. If the
-  bank has many signature bullets, they still all go in — trim ordinary bullets
-  first to make room.
+  (default `+`) and non-empty, a bank bullet's tag may carry the marker to flag a
+  standout accomplishment. There are **two tiers**, by how many times the marker
+  appears in the tag:
+  - **Mandatory — marker doubled (`++`).** A tag containing the marker *twice in a
+    row* (e.g. `` `[Backend · Game ++]` ``) is **always included on every assembled
+    CV — no exceptions — even when its track is off from the target role.** Every
+    `++` bullet goes in; there is no cap. These are the candidate's defining
+    accomplishments, marked precisely because they want them everywhere. If several
+    exist, trim ordinary bullets to make room rather than dropping any.
+  - **Priority — marker once (`+`).** A tag containing a *single* marker (e.g.
+    `` `[Game +]` ``) is a high-priority "highlight" bullet: **strongly prefer it**
+    when choosing which bullets to feature. The CV should carry **at least
+    `config.signature.min` (default 1) and at most `config.signature.max`
+    (default 2)** of these, preferring on-track ones — a soft floor that keeps a
+    headline accomplishment present. Unlike `++` bullets, a `+` bullet *may* be
+    left off if it is genuinely off-track and space is tight. `++` bullets do not
+    count toward this `+` min/max.
+
+  Strip the whole marker (single or double) along with the tag when placing a
+  bullet, and place signatures where they read best (usually near the top of their
+  role).
 - **Skills** are selected from the candidate's master skill list only — never
   invent a skill entry. Pull the ones the JD actually asks for.
 - **Personal projects** (if the bank has them) are used verbatim.
@@ -195,10 +206,12 @@ prose.** Tell them so explicitly. A reviewer scores **≥ bar** only when the CV
 would genuinely advance this candidate for this role.
 
 If the signature feature is on, **tell reviewers about the signature bullets**:
-the CV deliberately carries *every* crown-jewel bullet the candidate marked, and
-some of them *may* be off the role's exact track by design. Reviewers must not
-penalise the CV for including a mandatory signature bullet, even a slightly
-off-track one — those are required, not a choice to second-guess.
+the CV deliberately carries every **mandatory** (`++`) crown-jewel bullet plus a
+soft floor of **priority** (`+`) highlights, and some of them *may* be off the
+role's exact track by design. Reviewers must not penalise the CV for including a
+mandatory `++` bullet, even a slightly off-track one — those are required, not a
+choice to second-guess. They *may* flag whether the *right* `+` priority bullets
+were chosen (that tier is discretionary).
 
 **The panel personas** (universal 1–3; #4 is domain-matched to the JD):
 
