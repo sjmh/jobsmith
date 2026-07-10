@@ -147,24 +147,17 @@ Rules for the draft (these are the heart of the skill):
   Strip the whole marker (single or double) along with the tag when placing a
   bullet, and place signatures where they read best (usually near the top of their
   role).
-- **Skills** are selected from the candidate's master skill list only — never
-  invent a skill entry — but **be ruthlessly selective, not exhaustive.** The
-  master list is a menu to pick from, not a block to paste. Include only skills
-  relevant to *this* JD and drop whole categories the role doesn't ask for. Do
-  **not** reproduce long enumerations (e.g. every cloud-provider service, every
-  CI/config tool) — keep the few that map to a JD ask and cut the rest; a
-  certification or an experience bullet already signals the depth. **Keep the
-  master's category labels exactly as written — never invent, rename, or merge
-  categories; each selected skill stays on the same category line it has in the
-  bank** (a skill the bank lists under "AWS" stays under "AWS," not a new
-  "NoSQL & Caching" line you made up). Drop a category entirely if nothing in it
-  is relevant, but don't reshuffle skills between categories. Keep the section
-  tight, and prefer proving a competency in an experience bullet over listing it
-  as a vague skill (a bare "distributed microservices" line reads as filler; the
-  bullets prove it).
-  Don't over-correct, though: keep the delivery and tooling skills a role
-  genuinely relies on even when the JD doesn't spell them out — e.g. CI/CD and
-  deployment tooling for any backend services role.
+- **Skills** are printed **verbatim from the candidate's master skill block** —
+  never invent, reword, rename, merge, or cherry-pick. The master skill section
+  is the curated default (the candidate maintains it); the CV reproduces it
+  as-is, category labels and all, just like the profile/tagline. The **only**
+  change allowed is **dropping whole categories that are clearly off the role's
+  track** (e.g. omit a "Game Development" category on a backend résumé, or a
+  backend-only category on a gameplay résumé). Do **not** trim, reorder, or
+  select individual items within a kept category, invent new categories,
+  reshuffle skills between lines, or add a skill the JD mentions but the bank
+  lacks. If the skills section feels wrong for a role, the fix is to edit the
+  master skill block, not to re-tailor it here.
 - **Personal projects** (if the bank has them) are **all** included, verbatim
   (tag stripped) — the bank's project list is a small curated set, so include
   every entry, not a subset. Only drop one if the page is genuinely overflowing.
