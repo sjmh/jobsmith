@@ -21,6 +21,15 @@ which roles a bullet suits. The skill strips tags when placing a bullet, and the
 verbatim gate ignores them — they're just notes to yourself. Skip them entirely
 if you don't need them.
 
+**Optional signature marker.** Put a `+` *inside* a tag (e.g. `` `[Backend +]` ``,
+`` `[Backend · Game +]` ``) to flag a crown-jewel accomplishment you want to
+appear on *every* tailored CV, even when the role's specialty is a bit off. The
+tailor skill treats these as a signature pool and always carries 1–2 of them —
+you don't manage that here, the skill does. The marker and its floor/ceiling are
+configurable in `resume.config.json` (`signature.marker` / `min` / `max`); it is
+stripped along with the tag when the bullet is placed. Leave it off if you don't
+need it.
+
 **Conventions to record here** (edit to taste):
 - Target level(s):
 - Anything intentionally omitted (e.g. unrelated degree):

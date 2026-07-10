@@ -39,7 +39,16 @@ questions (rendering, styling) and plain prompts for free-text (name, paths).
 6. **Review bar.** Offer the defaults (bar 85, 3 rounds, 4 reviewers). Only change
    on request → `review`.
 
-7. **Rendering.** Ask: "Do you want a styled HTML + PDF, or just the Markdown CV?"
+7. **Signature bullets (optional).** "Do you have a few crown-jewel accomplishments
+   you'd want on *every* CV, even when the role's specialty is a bit off?" If yes,
+   explain they mark those in the bank by putting the signature marker inside the
+   bullet's tag (default `+`, e.g. `` `[Game +]` ``), and the skill will always
+   carry 1–2 of them. Keep the defaults unless they want a different marker or
+   floor/ceiling → `signature`. If they don't want the feature, set
+   `signature.marker` to `""` (or omit the block and note it's off by default only
+   when no marked bullets exist — the default marker is `+`).
+
+8. **Rendering.** Ask: "Do you want a styled HTML + PDF, or just the Markdown CV?"
    - **Markdown only** → `render.enabled: false`. Done.
    - **Styled output** → `render.enabled: true`, and:
      - **Puppeteer:** the bundled renderer needs it for PDFs. Check whether it's

@@ -124,6 +124,17 @@ Rules for the draft (these are the heart of the skill):
   split, or invent a bullet. If the bank tags bullets with `` `[tag]` `` markers,
   strip the tag when placing the bullet. Select the bullets that best hit this
   JD's priorities.
+- **Signature bullets (crown jewels).** If `config.signature.marker` is set
+  (default `+`) and non-empty, treat any bank bullet whose tag *contains that
+  marker* (e.g. `` `[Game +]` ``, `` `[Backend · Game +]` ``) as a signature
+  accomplishment. These form a **signature pool**: every assembled CV must carry
+  **at least `config.signature.min` (default 1) and at most `config.signature.max`
+  (default 2)** signature bullets — *even one whose track is off from the target
+  role* (e.g. a `` `[Game +]` `` bullet on a backend CV). This is a floor that
+  guarantees a headline accomplishment always appears, not a mandate to include
+  the whole pool. The marker is part of the tag and is stripped along with it when
+  the bullet is placed. Prefer signature bullets that also fit the JD; only reach
+  off-track to satisfy the floor when no on-track signature bullet exists.
 - **Skills** are selected from the candidate's master skill list only — never
   invent a skill entry. Pull the ones the JD actually asks for.
 - **Personal projects** (if the bank has them) are used verbatim.
@@ -182,6 +193,12 @@ Every fix a reviewer proposes must be achievable by **selecting different
 verbatim bullets/skills or re-tailoring the profile copy — never by writing new
 prose.** Tell them so explicitly. A reviewer scores **≥ bar** only when the CV
 would genuinely advance this candidate for this role.
+
+If the signature feature is on, **tell reviewers about the signature floor**: the
+CV deliberately carries 1–2 crown-jewel bullets from the candidate's signature
+pool, and one of them *may* be off the role's exact track by design. They should
+judge whether the *right* signature bullets were chosen, but not penalise the CV
+merely for honouring the floor with a slightly off-track headline accomplishment.
 
 **The panel personas** (universal 1–3; #4 is domain-matched to the JD):
 

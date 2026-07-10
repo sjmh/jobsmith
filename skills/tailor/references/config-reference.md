@@ -19,6 +19,7 @@ itself stays generic. All fields have defaults; a minimal config only needs
     "Never disclose <specific thing>; refer to it only as <approved phrasing>."
   ],
   "review": { "bar": 85, "maxRounds": 3, "panelSize": 4 },
+  "signature": { "marker": "+", "min": 1, "max": 2 },
   "render": {
     "enabled": true,
     "command": "node {skillDir}/scripts/render-cv.mjs {cv} {out} --role \"{role}\"",
@@ -42,6 +43,9 @@ itself stays generic. All fields have defaults; a minimal config only needs
 | `review.bar` | Confidence threshold (0–100) every reviewer must clear. | `85` |
 | `review.maxRounds` | Max review→rewrite rounds before shipping regardless. | `3` |
 | `review.panelSize` | Number of reviewers on the panel. | `4` |
+| `signature.marker` | Character that, inside a bank bullet's tag (e.g. `` `[Game +]` ``), flags a crown-jewel accomplishment. Set to `""` to disable the whole signature feature. | `"+"` |
+| `signature.min` | Minimum signature bullets every assembled CV must carry (a floor, even if their track is off from the role). | `1` |
+| `signature.max` | Maximum signature bullets to include — a ceiling, not a mandate to use the whole pool. | `2` |
 | `render.enabled` | Whether to produce styled HTML + PDF. If `false`, the tailored `.md` is the deliverable. | `false` |
 | `render.command` | Shell command template. `{skillDir}` `{cv}` `{out}` `{role}` are substituted. | bundled renderer |
 | `render.template` | Styling module the renderer uses (edit to re-skin). | bundled `template.mjs` |
@@ -58,3 +62,22 @@ itself stays generic. All fields have defaults; a minimal config only needs
 
 A workspace that already has its own renderer (like a Puppeteer project) can point
 `render.command` at that instead — the skill just runs whatever is configured.
+
+## Signature bullets (crown jewels)
+
+Some accomplishments are headline material regardless of the role — you want one
+to appear on *every* CV even when its specialty is off from the target job. Mark
+those in the master bank by putting `signature.marker` **inside the bullet's
+tag** — with the default marker `+`:
+
+```
+- `[Game +]` Powered the game's free-to-play monetization as lead engineer...
+- `[Backend · Game +]` Co-led the mobile platform that shipped three titles...
+```
+
+These marked bullets form a **signature pool**. When drafting, the skill includes
+between `signature.min` and `signature.max` of them on every CV — a floor that
+guarantees a headline accomplishment always lands, not a mandate to use them all.
+The marker is part of the tag, so it is stripped (along with the tag) when the
+bullet is placed, and the verbatim gate ignores it. Set `signature.marker` to
+`""` to turn the feature off entirely.
