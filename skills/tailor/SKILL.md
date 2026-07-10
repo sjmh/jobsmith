@@ -153,10 +153,15 @@ Rules for the draft (these are the heart of the skill):
   relevant to *this* JD and drop whole categories the role doesn't ask for. Do
   **not** reproduce long enumerations (e.g. every cloud-provider service, every
   CI/config tool) — keep the few that map to a JD ask and cut the rest; a
-  certification or an experience bullet already signals the depth. Collapse thin
-  categories together, keep the section tight (roughly 5–7 rows), and prefer
-  proving a competency in an experience bullet over listing it as a vague skill
-  (a bare "distributed microservices" line reads as filler; the bullets prove it).
+  certification or an experience bullet already signals the depth. **Keep the
+  master's category labels exactly as written — never invent, rename, or merge
+  categories; each selected skill stays on the same category line it has in the
+  bank** (a skill the bank lists under "AWS" stays under "AWS," not a new
+  "NoSQL & Caching" line you made up). Drop a category entirely if nothing in it
+  is relevant, but don't reshuffle skills between categories. Keep the section
+  tight, and prefer proving a competency in an experience bullet over listing it
+  as a vague skill (a bare "distributed microservices" line reads as filler; the
+  bullets prove it).
   Don't over-correct, though: keep the delivery and tooling skills a role
   genuinely relies on even when the JD doesn't spell them out — e.g. CI/CD and
   deployment tooling for any backend services role.
