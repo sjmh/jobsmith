@@ -142,8 +142,8 @@ Rules for the draft (these are the heart of the skill):
   closest-matching copy and lightly tailor only the lead/closing to the JD. If
   not, write a profile that restates *only facts already present in the bank* —
   no new claims, metrics, or titles.
-- **Header role/title:** use the config's default role, or the JD's title if the
-  config says to mirror it. Follow whatever the config records.
+- **Header role/title:** always use `config.role.default` verbatim. **Never
+  change it to match the JD's posted title** — the header title is static.
 - **Confidentiality:** honour every rule in `config.confidentiality` exactly.
 - Keep it to roughly one page of content — cut to the most relevant bullets.
 

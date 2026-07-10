@@ -14,7 +14,7 @@ itself stays generic. All fields have defaults; a minimal config only needs
   "masterBank": "master/work-history.md",
   "profileSource": "master/profiles.md",
   "applicationsDir": "applications",
-  "role": { "default": "Software Engineer", "mirrorJobTitle": false },
+  "role": { "default": "Software Engineer" },
   "confidentiality": [
     "Never disclose <specific thing>; refer to it only as <approved phrasing>."
   ],
@@ -37,8 +37,7 @@ itself stays generic. All fields have defaults; a minimal config only needs
 | `masterBank` | Path to the master experience bank — the source of truth bullets are pulled from verbatim. **Required.** | — |
 | `profileSource` | Optional file of reusable, pre-approved summary paragraphs / per-job blurbs to reuse and lightly tailor. Omit if none. | none |
 | `applicationsDir` | Where tailored applications are written (`<dir>/<slug>/`). | `applications` |
-| `role.default` | Header sub-title / role printed on the CV. Used verbatim. | `Software Engineer` |
-| `role.mirrorJobTitle` | If `true`, use the JD's posted title instead of `role.default`. | `false` |
+| `role.default` | Header sub-title / role printed on the CV. Always used verbatim — the header title is static and never mirrors the JD's posted title. | `Software Engineer` |
 | `confidentiality` | List of hard rules (NDAs, "refer to X only as Y") the workflow must honour exactly. | `[]` |
 | `review.bar` | Confidence threshold (0–100) every reviewer must clear. | `85` |
 | `review.maxRounds` | Max review→rewrite rounds before shipping regardless. | `3` |

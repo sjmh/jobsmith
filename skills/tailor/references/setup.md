@@ -28,9 +28,9 @@ questions (rendering, styling) and plain prompts for free-text (name, paths).
    from bank facts.
 
 4. **Output location & role.** Where tailored applications go (default
-   `applications/`) → `applicationsDir`. The default header role/title to print
-   → `role.default`. Ask whether the header should mirror each JD's posted title
-   instead → `role.mirrorJobTitle`.
+   `applications/`) → `applicationsDir`. The header role/title to print
+   → `role.default`. This title is static: it is always used verbatim and never
+   changed to match a JD's posted title.
 
 5. **Confidentiality rules (optional).** "Any NDAs or things you must describe a
    specific way (e.g. can't name an employer/product)?" Capture each rule
