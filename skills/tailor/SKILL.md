@@ -127,14 +127,14 @@ Rules for the draft (these are the heart of the skill):
 - **Signature bullets (crown jewels).** If `config.signature.marker` is set
   (default `+`) and non-empty, treat any bank bullet whose tag *contains that
   marker* (e.g. `` `[Game +]` ``, `` `[Backend · Game +]` ``) as a signature
-  accomplishment. These form a **signature pool**: every assembled CV must carry
-  **at least `config.signature.min` (default 1) and at most `config.signature.max`
-  (default 2)** signature bullets — *even one whose track is off from the target
-  role* (e.g. a `` `[Game +]` `` bullet on a backend CV). This is a floor that
-  guarantees a headline accomplishment always appears, not a mandate to include
-  the whole pool. The marker is part of the tag and is stripped along with it when
-  the bullet is placed. Prefer signature bullets that also fit the JD; only reach
-  off-track to satisfy the floor when no on-track signature bullet exists.
+  accomplishment. **Every signature bullet is ALWAYS included on every assembled
+  CV — no exceptions — even one whose track is off from the target role** (e.g. a
+  `` `[Game +]` `` bullet on a backend CV). Signature bullets are mandatory, not a
+  pool to sample from; the candidate marked them precisely because they want them
+  to appear everywhere. Place them where they read best (usually near the top of
+  their role), and strip the marker along with the tag when placing them. If the
+  bank has many signature bullets, they still all go in — trim ordinary bullets
+  first to make room.
 - **Skills** are selected from the candidate's master skill list only — never
   invent a skill entry. Pull the ones the JD actually asks for.
 - **Personal projects** (if the bank has them) are used verbatim.
@@ -194,11 +194,11 @@ verbatim bullets/skills or re-tailoring the profile copy — never by writing ne
 prose.** Tell them so explicitly. A reviewer scores **≥ bar** only when the CV
 would genuinely advance this candidate for this role.
 
-If the signature feature is on, **tell reviewers about the signature floor**: the
-CV deliberately carries 1–2 crown-jewel bullets from the candidate's signature
-pool, and one of them *may* be off the role's exact track by design. They should
-judge whether the *right* signature bullets were chosen, but not penalise the CV
-merely for honouring the floor with a slightly off-track headline accomplishment.
+If the signature feature is on, **tell reviewers about the signature bullets**:
+the CV deliberately carries *every* crown-jewel bullet the candidate marked, and
+some of them *may* be off the role's exact track by design. Reviewers must not
+penalise the CV for including a mandatory signature bullet, even a slightly
+off-track one — those are required, not a choice to second-guess.
 
 **The panel personas** (universal 1–3; #4 is domain-matched to the JD):
 
