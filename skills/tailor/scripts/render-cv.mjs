@@ -94,7 +94,9 @@ function renderCvHtml(markdown, { role }) {
       while (i < lines.length && !lines[i].startsWith('## ')) {
         if (!lines[i].startsWith('### ')) { i++; continue; }
         const parts = lines[i].replace(/^### /, '').split('|').map(s => s.trim());
-        const company = parts[0] || '', dates = parts[2] || '';
+        // Header is `Company | Location | Dates`; a 2-field `Company | Dates`
+        // (no location) is also accepted — dates are always the last field.
+        const company = parts[0] || '', dates = (parts.length >= 3 ? parts[2] : parts[1]) || '';
         i++;
         while (i < lines.length && lines[i].trim() === '') i++;
         let jobTitle = '';
