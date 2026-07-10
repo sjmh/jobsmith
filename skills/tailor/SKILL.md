@@ -147,7 +147,15 @@ Rules for the draft (these are the heart of the skill):
   bullet, and place signatures where they read best (usually near the top of their
   role).
 - **Skills** are selected from the candidate's master skill list only — never
-  invent a skill entry. Pull the ones the JD actually asks for.
+  invent a skill entry — but **be ruthlessly selective, not exhaustive.** The
+  master list is a menu to pick from, not a block to paste. Include only skills
+  relevant to *this* JD and drop whole categories the role doesn't ask for. Do
+  **not** reproduce long enumerations (e.g. every cloud-provider service, every
+  CI/config tool) — keep the few that map to a JD ask and cut the rest; a
+  certification or an experience bullet already signals the depth. Collapse thin
+  categories together, keep the section tight (roughly 5–7 rows), and prefer
+  proving a competency in an experience bullet over listing it as a vague skill
+  (a bare "distributed microservices" line reads as filler; the bullets prove it).
 - **Personal projects** (if the bank has them) are used verbatim.
 - **Profile paragraph:** if a reusable-profile source is configured, reuse the
   closest-matching copy and lightly tailor only the lead/closing to the JD. If
