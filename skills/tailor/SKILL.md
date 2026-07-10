@@ -56,7 +56,8 @@ learn who the candidate is and where their material lives, then **write
    `references/master-bank-template.md` and tell them to fill it in before the
    first real run.
 3. **Reusable profile copy** *(optional)* — a file of pre-approved summary
-   paragraph(s) / per-job blurbs to reuse and lightly tailor, if they keep one.
+   paragraph(s) / per-job blurbs to reuse **verbatim** (same tagline on every
+   CV), if they keep one.
 4. **Output location** — the directory tailored applications get written to
    (default `applications/`), and the default header role/title to print.
 5. **Confidentiality rules** *(optional)* — any NDA / "refer to X only as Y"
@@ -162,10 +163,12 @@ Rules for the draft (these are the heart of the skill):
 - **Personal projects** (if the bank has them) are **all** included, verbatim
   (tag stripped) — the bank's project list is a small curated set, so include
   every entry, not a subset. Only drop one if the page is genuinely overflowing.
-- **Profile paragraph:** if a reusable-profile source is configured, reuse the
-  closest-matching copy and lightly tailor only the lead/closing to the JD. If
-  not, write a profile that restates *only facts already present in the bank* —
-  no new claims, metrics, or titles.
+- **Profile paragraph:** if a reusable-profile source is configured, use the
+  closest-matching copy **verbatim — do not reword or re-tailor it to the JD.**
+  The profile (tagline) stays identical across every CV of that track; only the
+  track selection (e.g. backend vs. game) may differ. If no profile source is
+  configured, write one that restates *only facts already present in the bank* —
+  no new claims, metrics, or titles — and reuse that same text on later CVs.
 - **Header role/title:** always use `config.role.default` verbatim. **Never
   change it to match the JD's posted title** — the header title is static.
 - **Confidentiality:** honour every rule in `config.confidentiality` exactly.
@@ -278,7 +281,8 @@ can't back it verbatim → it's a master-bank suggestion).
    node ${CLAUDE_PLUGIN_ROOT}/skills/tailor/scripts/verbatim-check.js <masterBankPath> <applicationsDir>/<slug>/cv-optimised.md
    ```
    It confirms every EXPERIENCE bullet and PERSONAL PROJECTS entry is verbatim
-   from the master bank (profile/blurbs are exempt — light tailoring is allowed).
+   from the master bank (profile/blurbs are exempt from this gate — they are
+   reused verbatim from the profile source, not tailored).
    If it exits non-zero, **do not render**: replace each flagged line with a
    genuine verbatim bank bullet (or remove it) and re-run until clean. A drift
    here means a bullet was silently reworded or invented — the exact failure this

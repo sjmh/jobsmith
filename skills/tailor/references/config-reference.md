@@ -35,7 +35,7 @@ itself stays generic. All fields have defaults; a minimal config only needs
 | `candidate.name` | Printed as the CV `# Name` header. **Required.** | — |
 | `candidate.contact` | The `\|`-separated contact line under the name (links auto-detected). | `""` |
 | `masterBank` | Path to the master experience bank — the source of truth bullets are pulled from verbatim. **Required.** | — |
-| `profileSource` | Optional file of reusable, pre-approved summary paragraphs / per-job blurbs to reuse and lightly tailor. Omit if none. | none |
+| `profileSource` | Optional file of reusable, pre-approved summary paragraphs / per-job blurbs, reused **verbatim** (same tagline on every CV — not re-tailored per JD). Omit if none. | none |
 | `applicationsDir` | Where tailored applications are written (`<dir>/<slug>/`). | `applications` |
 | `role.default` | Header sub-title / role printed on the CV. Always used verbatim — the header title is static and never mirrors the JD's posted title. | `Software Engineer` |
 | `confidentiality` | List of hard rules (NDAs, "refer to X only as Y") the workflow must honour exactly. | `[]` |
