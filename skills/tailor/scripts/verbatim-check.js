@@ -66,13 +66,27 @@ for (const raw of cv) {
   if (!inBank(body)) bad.push(norm(body));
 }
 
+// Dash policy: no em-dashes (U+2014) or en-dashes (U+2013) anywhere in the CV -
+// plain hyphens only. Fancy dashes read as an AI-writing tell and cause encoding
+// churn; the loose verbatim match already tolerates the '-' swap, so this is safe.
+const dashLines = [];
+cv.forEach((raw, idx) => {
+  const s = raw.replace(/\r$/, '');
+  if (/[–—]/.test(s)) dashLines.push(`line ${idx + 1}: ${s.trim().slice(0, 120)}`);
+});
+
 console.log(`Verbatim check: ${cvPath}`);
 console.log(`  master bank: ${masterPath}  (${bankExact.size} bullets)`);
 console.log(`  CV bullets not verbatim in the bank: ${bad.length}`);
 bad.forEach(b => console.log('    !! ' + b.slice(0, 140)));
+console.log(`  CV lines with em/en dashes (use '-' instead): ${dashLines.length}`);
+dashLines.forEach(d => console.log('    !! ' + d));
 
-if (bad.length) {
-  console.log('RESULT: DRIFT FOUND — do not render. Replace each flagged line with a verbatim master bullet or remove it.');
+const problems = [];
+if (bad.length) problems.push(`${bad.length} non-verbatim bullet(s)`);
+if (dashLines.length) problems.push(`${dashLines.length} line(s) with em/en dashes`);
+if (problems.length) {
+  console.log(`RESULT: FAIL - ${problems.join('; ')}. Do not render until fixed.`);
   process.exit(1);
 }
-console.log('RESULT: OK — all checked bullets are verbatim from the master bank.');
+console.log('RESULT: OK - all checked bullets are verbatim and no em/en dashes present.');
