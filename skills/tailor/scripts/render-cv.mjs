@@ -30,6 +30,7 @@ for (let i = 0; i < argv.length; i++) {
   if (argv[i] === '--role') opts.role = argv[++i];
   else if (argv[i] === '--cover') opts.cover = argv[++i];
   else if (argv[i] === '--template') opts.template = argv[++i];
+  else if (argv[i] === '--html-only') opts.htmlOnly = true;
   else positional.push(argv[i]);
 }
 const [cvPath, outBase] = positional;
@@ -90,35 +91,79 @@ function renderCvHtml(markdown, { role }) {
       skillsHtml = rows.join('\n      '); skip();
 
     } else if (section === 'EXPERIENCE') {
+      // Two supported shapes, auto-detected per `### ` block:
+      //   GROUPED — `### Company | Dates` then one or more `#### Title | Dates`
+      //             sub-roles (each with its own blurb/bullets). The company span
+      //             stays continuous even if a sub-role's bullets are trimmed, so
+      //             dropping a role never opens a date gap.
+      //   FLAT    — `### Company | Location | Dates` then `**Title**` then bullets
+      //             (the original single-role-per-block layout; still rendered).
+      // A helper renders one role's blurb + bullets.
+      const roleBody = (blurb, bullets) => {
+        const blurbHtml = blurb ? `<p class="job-blurb">${blurb}</p>` : '';
+        const bulletHtml = bullets.length ? `<ul>\n          ${bullets.join('\n          ')}\n        </ul>` : '';
+        return `${blurbHtml}\n        ${bulletHtml}`;
+      };
       const jobs = [];
       while (i < lines.length && !lines[i].startsWith('## ')) {
         if (!lines[i].startsWith('### ')) { i++; continue; }
         const parts = lines[i].replace(/^### /, '').split('|').map(s => s.trim());
-        // Header is `Company | Location | Dates`; a 2-field `Company | Dates`
-        // (no location) is also accepted — dates are always the last field.
-        const company = parts[0] || '', dates = (parts.length >= 3 ? parts[2] : parts[1]) || '';
+        // Company header: `Company | Location | Dates` or `Company | Dates` — the
+        // date span is always the last `|`-field.
+        const company = parts[0] || '', dates = parts.length >= 2 ? parts[parts.length - 1] : '';
         i++;
         while (i < lines.length && lines[i].trim() === '') i++;
-        let jobTitle = '';
-        if (lines[i] && lines[i].startsWith('**')) { jobTitle = lines[i].replace(/\*\*/g, '').trim(); i++; }
-        let blurb = ''; const bullets = [];
-        while (i < lines.length && !lines[i].startsWith('### ') && !lines[i].startsWith('## ')) {
-          const l = lines[i].trim();
-          if (l.startsWith('- ')) bullets.push(`<li>${parseInline(l.slice(2))}</li>`);
-          else if (l && l !== '---') blurb = parseInline(l);
-          i++;
-        }
-        const blurbHtml = blurb ? `<p class="job-blurb">${blurb}</p>` : '';
-        const bulletHtml = bullets.length ? `<ul>\n          ${bullets.join('\n          ')}\n        </ul>` : '';
-        jobs.push(`
+
+        if (lines[i] && lines[i].startsWith('#### ')) {
+          // GROUPED: company header, then each `#### Title | Dates` sub-role.
+          const roles = [];
+          while (i < lines.length && lines[i].startsWith('#### ')) {
+            const rp = lines[i].replace(/^#### /, '').split('|').map(s => s.trim());
+            const rTitle = rp[0] || '', rDates = rp.length >= 2 ? rp[rp.length - 1] : '';
+            i++;
+            let blurb = ''; const bullets = [];
+            while (i < lines.length && !lines[i].startsWith('#### ') && !lines[i].startsWith('### ') && !lines[i].startsWith('## ')) {
+              const l = lines[i].trim();
+              if (l.startsWith('- ')) bullets.push(`<li>${parseInline(l.slice(2))}</li>`);
+              else if (l && l !== '---') blurb = parseInline(l);
+              i++;
+            }
+            roles.push(`
+        <div class="subrole">
+          <div class="subrole-head">
+            <div class="subrole-title">${esc(rTitle)}</div>
+            <div class="subrole-dates">${esc(rDates)}</div>
+          </div>
+          ${roleBody(blurb, bullets)}
+        </div>`);
+          }
+          jobs.push(`
+      <div class="company">
+        <div class="company-head">
+          <div class="company-name">${esc(company)}</div>
+          <div class="company-dates">${esc(dates)}</div>
+        </div>${roles.join('')}
+      </div>`);
+        } else {
+          // FLAT (backward compatible): `**Title**` then blurb/bullets.
+          let jobTitle = '';
+          if (lines[i] && lines[i].startsWith('**')) { jobTitle = lines[i].replace(/\*\*/g, '').trim(); i++; }
+          let blurb = ''; const bullets = [];
+          while (i < lines.length && !lines[i].startsWith('### ') && !lines[i].startsWith('## ')) {
+            const l = lines[i].trim();
+            if (l.startsWith('- ')) bullets.push(`<li>${parseInline(l.slice(2))}</li>`);
+            else if (l && l !== '---') blurb = parseInline(l);
+            i++;
+          }
+          jobs.push(`
       <div class="job">
         <div class="job-head">
           <div class="job-title">${esc(jobTitle)} &middot; <span class="job-org">${esc(company)}</span></div>
           <div class="job-dates">${esc(dates)}</div>
         </div>
-        ${blurbHtml}
-        ${bulletHtml}
+        ${roleBody(blurb, bullets)}
       </div>`);
+        }
       }
       experienceHtml = jobs.join('\n'); skip();
 
@@ -211,6 +256,8 @@ if (opts.cover) {
   console.log('HTML:', clHtmlPath);
   jobs.push({ htmlPath: clHtmlPath, pdfPath: path.resolve(outBase + '_CoverLetter.pdf') });
 }
+
+if (opts.htmlOnly) { process.exit(0); }  // fast iteration: skip the PDF pass
 
 // Resolve puppeteer from the skill dir first, then from the workspace (CWD) where
 // the user likely ran `npm install puppeteer`. Node's bare-import resolution only

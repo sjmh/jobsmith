@@ -109,15 +109,23 @@ email | linkedin.com/in/handle | github.com/handle | City, ST
 ...
 
 ## EXPERIENCE
-### Company | Location | Dates
-**Job Title**
+### Company | Full Tenure Span
+#### Job Title | Role Dates
 <optional one-line blurb>
 - <verbatim accomplishment bullet>
 - ...
+#### Earlier Job Title | Role Dates
+- <verbatim accomplishment bullet>
 
 ## PERSONAL PROJECTS
 - **Name:** verbatim description
 ```
+
+Group each company under one `### Company | Full Tenure Span` header, with a
+`#### Title | Role Dates` sub-role for every title held there (bullets under the
+title they belong to). The renderer also still accepts the older flat shape
+(`### Company | Location | Dates` then `**Title**` then bullets) — match whatever
+an existing tailored CV in `<applicationsDir>/*/` already uses.
 
 Rules for the draft (these are the heart of the skill):
 

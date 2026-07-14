@@ -11,7 +11,7 @@
 
 const FONTS = `<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">`;
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">`;
 
 // Design tokens + base layout shared by every document. EDIT THESE to re-skin.
 const BASE_CSS = `
@@ -27,7 +27,7 @@ const BASE_CSS = `
   .page{width:100%;max-width:760px}
   header{border-bottom:2px solid var(--ink);padding-bottom:16px;margin-bottom:24px}
   .name{font-family:var(--serif);font-weight:600;font-size:40px;line-height:1.05;letter-spacing:-.01em}
-  .role{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-top:10px}
+  .role{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-top:10px}
   .contact{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:12px;display:flex;flex-wrap:wrap;gap:5px 14px}
   .contact a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--rule)}
   .contact a:hover{color:var(--accent);border-color:var(--accent)}
@@ -46,6 +46,23 @@ const CV_CSS = `
   .job-org{color:var(--accent);font-weight:600}
   .job-dates{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap}
   .job-blurb{font-size:13px;color:var(--muted);margin:6px 0 10px;line-height:1.5}
+  /* Company-grouped experience: one company header (full tenure span) over N
+     sub-roles, laid out as a subtle timeline (accent node + connecting rail).
+     Emitted when a "### Company" block contains "#### Title" sub-roles; the flat
+     .job layout above still renders the older "**Title**" block shape. */
+  .company{margin-bottom:24px}
+  .company:last-child{margin-bottom:0}
+  .company-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;padding-bottom:6px;margin-bottom:15px;border-bottom:1.5px solid var(--ink)}
+  .company-name{font-family:var(--serif);font-size:17px;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+  .company-dates{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);white-space:nowrap}
+  .subrole{position:relative;padding-left:18px;margin-bottom:15px}
+  .subrole:last-child{margin-bottom:0}
+  .subrole::before{content:"";position:absolute;left:0;top:5px;width:8px;height:8px;border-radius:50%;background:var(--paper);border:2px solid var(--accent);box-sizing:border-box;z-index:1}
+  .subrole::after{content:"";position:absolute;left:3px;top:6px;height:calc(100% + 15px);width:2px;background:var(--rule)}
+  .subrole:last-child::after{display:none}
+  .subrole-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+  .subrole-title{font-family:var(--mono);font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+  .subrole-dates{font-family:var(--mono);font-size:10.5px;letter-spacing:.03em;color:var(--muted);white-space:nowrap}
   ul{list-style:none}
   li{position:relative;padding-left:16px;font-size:13.5px;line-height:1.5;margin-bottom:5px;color:#2A2A2A}
   li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;background:var(--accent);border-radius:50%}
@@ -59,11 +76,15 @@ const CV_CSS = `
     .name{font-size:32px}
     section{margin-bottom:16px}
     .job{margin-bottom:12px}
+    .company{margin-bottom:12px}
+    .subrole{margin-bottom:8px}
+    .company-name{font-size:15px}
+    .subrole-title{font-size:11.5px}
     li{font-size:11.5px;margin-bottom:4px;break-inside:avoid}
     .summary{font-size:12.5px}
     .row-val,.job-blurb{font-size:11.5px}
     .sec-label{break-after:avoid}
-    .job-head{break-inside:avoid;break-after:avoid}
+    .job-head,.company-head,.subrole-head{break-inside:avoid;break-after:avoid}
   }
 `;
 
