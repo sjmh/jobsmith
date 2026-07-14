@@ -171,6 +171,14 @@ Rules for the draft (these are the heart of the skill):
   change it to match the JD's posted title** — the header title is static.
 - **Confidentiality:** honour every rule in `config.confidentiality` exactly.
 - Keep it to roughly one page of content — cut to the most relevant bullets.
+- **Continuous employment dates — trim from the oldest end.** When cutting roles
+  to save space, drop whole roles from the **oldest** end of a company's history,
+  never from the middle: dropping a middle role leaves a visible gap between the
+  role dates on either side, whereas oldest-first drops stay invisible (the
+  earlier span is simply not detailed). A role you keep only for continuity but
+  have nothing to feature may be listed as a **title + dates line with no
+  bullets** — never invent or pad filler bullets just to keep a role's dates on
+  the page.
 
 Also write `<applicationsDir>/<slug>/cv.config.json` if the renderer expects one
 (role title + output basename), matching the pattern of existing applications.
