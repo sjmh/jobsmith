@@ -189,6 +189,10 @@ Rules for the draft (these are the heart of the skill):
   they belong to an earlier one (e.g. a scale/observability win from an earlier
   title stays under that earlier title, not the latest). The date ranges of the
   roles shown should tile the company's overall tenure without an internal hole.
+- **No em-dashes - use a hyphen (`-`).** Never place an em-dash (`—`) anywhere in
+  the assembled CV; replace every em-dash with a plain hyphen, including inside
+  otherwise-verbatim bullets and reused profile copy. The verbatim gate tolerates
+  this (its loose match ignores punctuation), so the swap is not fabrication.
 
 Also write `<applicationsDir>/<slug>/cv.config.json` if the renderer expects one
 (role title + output basename), matching the pattern of existing applications.
